@@ -815,7 +815,7 @@ flowchart LR
 
 ### 7.4 Routing
 
-Všechny POST routy vyžadují CSRF token. `auth` znamená přihlášený aktivní uživatel. `role:x` znamená uvedenou roli nebo admina. Specifické cesty (`/udalosti/nova`, `/moderace/mista/novy`) se v `routes.php` registrují před parametrickými (`/udalosti/{slug}`, `/moderace/mista/{id}`). Pokud aplikace běží v podadresáři `/IIS`, drží se základ v `config.app.base_path`; router před porovnáním cestu odřízne a helper `url()` základ přidá. Všechny odkazy a assety v šablonách jdou přes `url()`, nikdy ručně.
+Všechny POST routy vyžadují CSRF token. `auth` znamená přihlášený aktivní uživatel. `role:x` znamená uvedenou roli nebo admina. `vlastník` znamená správce konkrétní události; admin prochází vždy, moderátor ne. Specifické cesty (`/udalosti/nova`, `/moderace/mista/novy`) se v `routes.php` registrují před parametrickými (`/udalosti/{slug}`, `/moderace/mista/{id}`). Pokud aplikace běží v podadresáři `/IIS`, drží se základ v `config.app.base_path`; router před porovnáním cestu odřízne a helper `url()` základ přidá. Všechny odkazy a assety v šablonách jdou přes `url()`, nikdy ručně.
 
 #### Veřejné a přihlašovací
 
@@ -1663,6 +1663,7 @@ Mapovací tabulka musí být konkrétní, například:
 - [ ] Jeden zip s názvem `<login>.zip`, odevzdává vedoucí týmu.
 - [ ] Obsahuje vlastní zdrojové kódy, `database/schema.sql`, `database/seed.sql`, `docs/doc.html`, README a konfigurační vzor.
 - [ ] Neobsahuje `.git`, `config/config.php`, logy, produkční uploady, `public/assets/vendor/` ani jiné cizí knihovny; Bootstrap je na Evě a jeho verze je v dokumentaci.
+- [ ] Neobsahuje interní `AGENTS.md`, `implementacni-plan.md` ani zadání; ty zůstávají v repozitáři, ne v odevzdávaném zipu.
 - [ ] Neobsahuje osobní údaje, hesla v README ani testovací hesla na veřejné stránce.
 - [ ] Velikost do 5 MB; zkontrolovat `du -h` a otevřít zip na jiném počítači.
 - [ ] Aplikace běží na veřejné URL, přihlášení všemi rolemi, demo data.
