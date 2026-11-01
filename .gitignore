@@ -1,0 +1,39 @@
+# Lokální konfigurace a tajemství
+/config/config.php
+/config/config.local.php
+.env
+.env.*
+!.env.example
+
+# Composer – runtime ani dev vendor necommitovat
+/vendor/
+
+# PHPUnit a nástroje
+.phpunit.result.cache
+.phpunit.cache/
+/coverage/
+
+# Logy a dočasné soubory
+*.log
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/tmp/*
+!/storage/tmp/.gitkeep
+
+# Uživatelské uploady
+/public/uploads/*
+!/public/uploads/.gitkeep
+# Až přibude .htaccess a demo data, výjimky se doplní:
+# !/public/uploads/.htaccess
+# !/public/uploads/demo/
+# !/public/uploads/demo/**
+
+# Odevzdávané archivy a lokální dumpy
+/*.zip
+*.dump
+
+# OS a editory
+.DS_Store
+.idea/
+.vscode/
+*.swp
