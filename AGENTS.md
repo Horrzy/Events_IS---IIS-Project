@@ -103,6 +103,7 @@ Nevymýšlej nové stavy, sloupce ani role. Platí:
 - Žádné dekorativní hlavičky souborů, autorství, datumy ani značky nástrojů.
 - Žádný zakomentovaný kód, `TODO`, `FIXME`, `var_dump`, `print_r`, `console.log`, `die()` pro uživatelské chyby.
 - Nepřepisuj formátování nesouvisejících souborů. Nepřesouvej soubory bez důvodu.
+- Router: `{id}` matchuje jen `\d+` a kladné číslo, `{slug}` jen `[a-z0-9-]+`; statické cesty se registrují před parametrickými, jinak vzniká kolize.
 - Preferuj jednoduché a vysvětlitelné řešení před „chytrým“.
 
 ## 8. Databáze a transakce

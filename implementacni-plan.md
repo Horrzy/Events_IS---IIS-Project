@@ -815,7 +815,7 @@ flowchart LR
 
 ### 7.4 Routing
 
-Všechny POST routy vyžadují CSRF token. `auth` znamená přihlášený aktivní uživatel. `role:x` znamená uvedenou roli nebo admina. `vlastník` znamená správce konkrétní události; admin prochází vždy, moderátor ne. Specifické cesty (`/udalosti/nova`, `/moderace/mista/novy`) se v `routes.php` registrují před parametrickými (`/udalosti/{slug}`, `/moderace/mista/{id}`). Pokud aplikace běží v podadresáři `/IIS`, drží se základ v `config.app.base_path`; router před porovnáním cestu odřízne a helper `url()` základ přidá. Všechny odkazy a assety v šablonách jdou přes `url()`, nikdy ručně.
+Všechny POST routy vyžadují CSRF token. `auth` znamená přihlášený aktivní uživatel. `role:x` znamená uvedenou roli nebo admina. `vlastník` znamená správce konkrétní události; admin prochází vždy, moderátor ne. Specifické cesty (`/udalosti/nova`, `/moderace/mista/novy`) se v `routes.php` registrují před parametrickými (`/udalosti/{slug}`, `/moderace/mista/{id}`). Parametry mají masky: `{id}` odpovídá `\d+` a kladnému celému číslu, `{slug}` odpovídá `[a-z0-9-]+`; cesta, která masce neodpovídá, končí 404. Pokud aplikace běží v podadresáři `/IIS`, drží se základ v `config.app.base_path`; router před porovnáním cestu odřízne a helper `url()` základ přidá. Všechny odkazy a assety v šablonách jdou přes `url()`, nikdy ručně.
 
 #### Veřejné a přihlašovací
 
