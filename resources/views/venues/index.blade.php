@@ -14,8 +14,8 @@
         <div class="card-body">
             <div class="row g-2 align-items-end">
                 <div class="col-md-5">
-                    <label for="q" class="form-label small text-muted mb-1">Hledat podle názvu nebo adresy</label>
-                    <input type="text" class="form-control" id="q" name="q" value="{{ $search }}" placeholder="Např. FIT VUT nebo Brno">
+                    <label for="q" class="form-label small text-muted mb-1">Hledat</label>
+                    <input type="text" class="form-control" id="q" name="q" value="{{ $search }}" placeholder="Název nebo adresa">
                 </div>
                 <div class="col-md-4">
                     <label for="city" class="form-label small text-muted mb-1">Město</label>

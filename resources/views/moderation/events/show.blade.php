@@ -116,7 +116,7 @@
                                         id="rejection_reason"
                                         name="rejection_reason"
                                         rows="3"
-                                        placeholder="Vysvětlete pořadateli, co má upravit..."
+                                        placeholder="Důvod zamítnutí"
                                         required
                                     >{{ old('rejection_reason') }}</textarea>
                                     @error('rejection_reason')

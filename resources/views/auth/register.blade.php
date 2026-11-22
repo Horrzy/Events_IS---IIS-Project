@@ -24,7 +24,7 @@
                                 required
                                 autofocus
                             >
-                            <div class="form-text">Alespoň 3 znaky (písmena, čísla, pomlčka nebo podtržítko).</div>
+                            <div class="form-text">Min. 3 znaky (písmena, čísla, - nebo _).</div>
                             @error('username')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -70,7 +70,7 @@
                                 name="password"
                                 required
                             >
-                            <div class="form-text">Alespoň 8 znaků.</div>
+                            <div class="form-text">Min. 8 znaků.</div>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

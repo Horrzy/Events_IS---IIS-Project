@@ -15,10 +15,10 @@
             <div class="row g-2 align-items-end">
                 <div class="col-md-3">
                     <label for="q" class="form-label small text-muted mb-1">Hledat</label>
-                    <input type="text" class="form-control" id="q" name="q" value="{{ $filters['q'] }}" placeholder="Název nebo popis...">
+                    <input type="text" class="form-control" id="q" name="q" value="{{ $filters['q'] }}" placeholder="Název nebo popis">
                 </div>
                 <div class="col-md-3">
-                    <label for="category_id" class="form-label small text-muted mb-1">Kategorie (včetně podkategorií)</label>
+                    <label for="category_id" class="form-label small text-muted mb-1">Kategorie</label>
                     <select class="form-select" id="category_id" name="category_id">
                         <option value="">Všechny kategorie</option>
                         @foreach ($categoryTree as $item)

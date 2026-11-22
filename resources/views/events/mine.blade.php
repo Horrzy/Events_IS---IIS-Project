@@ -94,7 +94,7 @@
                                                 type="text"
                                                 name="cancelled_reason"
                                                 class="form-control form-control-sm"
-                                                placeholder="Důvod zrušení události..."
+                                                placeholder="Důvod zrušení"
                                                 required
                                             >
                                             <button type="submit" class="btn btn-sm btn-danger text-nowrap">Potvrdit zrušení</button>

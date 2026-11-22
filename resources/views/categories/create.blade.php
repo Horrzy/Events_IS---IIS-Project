@@ -27,7 +27,7 @@
                                 id="name"
                                 name="name"
                                 value="{{ old('name') }}"
-                                placeholder="Např. Seminář nebo Koncert"
+                                placeholder="Název kategorie"
                                 required
                             >
                             @error('name')
@@ -38,14 +38,14 @@
                         <div class="mb-3">
                             <label for="parent_id" class="form-label">Nadřazená kategorie <span class="text-muted small">(nepovinné)</span></label>
                             <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                <option value="">— Hlavní kategorie (bez nadřazené) —</option>
+                                <option value="">Žádná (hlavní kategorie)</option>
                                 @foreach ($parentOptions as $option)
                                     <option value="{{ $option['category']->id }}" @selected((string) old('parent_id') === (string) $option['category']->id)>
                                         {{ $option['label'] }}
                                     </option>
                                 @endforeach
                             </select>
-                            <div class="form-text">Maximální hloubka hierarchie jsou 4 úrovně.</div>
+                            <div class="form-text">Max. 4 úrovně.</div>
                             @error('parent_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -58,7 +58,7 @@
                                 id="description"
                                 name="description"
                                 rows="3"
-                                placeholder="Krátký popis, jaké události do kategorie patří..."
+                                placeholder="Popis kategorie..."
                             >{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>

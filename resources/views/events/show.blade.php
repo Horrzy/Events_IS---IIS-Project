@@ -153,7 +153,7 @@
                                         id="body"
                                         name="body"
                                         rows="3"
-                                        placeholder="Napište, jak se vám událost líbila..."
+                                        placeholder="Napište komentář..."
                                         required
                                     >{{ old('body', $userComment?->body) }}</textarea>
                                     @error('body')

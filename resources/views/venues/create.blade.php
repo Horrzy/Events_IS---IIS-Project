@@ -27,7 +27,7 @@
                                 id="name"
                                 name="name"
                                 value="{{ old('name') }}"
-                                placeholder="Např. FIT VUT – aula Q"
+                                placeholder="Název místa"
                                 required
                             >
                             @error('name')
@@ -44,7 +44,7 @@
                                     id="street"
                                     name="street"
                                     value="{{ old('street') }}"
-                                    placeholder="Např. Božetěchova 2"
+                                    placeholder="Ulice a číslo"
                                     required
                                 >
                                 @error('street')
@@ -60,7 +60,7 @@
                                     id="city"
                                     name="city"
                                     value="{{ old('city') }}"
-                                    placeholder="Brno"
+                                    placeholder="Město"
                                     required
                                 >
                                 @error('city')
@@ -76,7 +76,7 @@
                                     id="postal_code"
                                     name="postal_code"
                                     value="{{ old('postal_code') }}"
-                                    placeholder="612 66"
+                                    placeholder="PSČ"
                                 >
                                 @error('postal_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -91,7 +91,7 @@
                                 id="description"
                                 name="description"
                                 rows="4"
-                                placeholder="Krátký popis, dostupnost, parkování..."
+                                placeholder="Popis místa..."
                             >{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="photo" class="form-label">Fotka místa <span class="text-muted small">(nepovinné – JPG, PNG, WebP, max 2 MB)</span></label>
+                            <label for="photo" class="form-label">Fotka místa <span class="text-muted small">(nepovinné, max 2 MB)</span></label>
                             <input
                                 type="file"
                                 class="form-control @error('photo') is-invalid @enderror"

@@ -43,7 +43,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body p-4">
                 <h2 class="h5 mb-3">Základní údaje</h2>
-                <p class="text-muted small mb-4">Pole označená <span class="text-danger">*</span> jsou povinná. Časy zadávejte v českém čase (Europe/Prague).</p>
+                <p class="text-muted small mb-4">Pole označená <span class="text-danger">*</span> jsou povinná.</p>
 
                 <div class="mb-3">
                     <label for="title" class="form-label">Název události <span class="text-danger">*</span></label>
@@ -53,7 +53,7 @@
                         id="title"
                         name="title"
                         value="{{ old('title', $event?->title) }}"
-                        placeholder="Např. Podzimní PHP meetup"
+                        placeholder="Název události"
                         required
                     >
                     @error('title')
@@ -65,7 +65,7 @@
                     <div class="col-md-6">
                         <label for="venue_id" class="form-label">Místo konání <span class="text-danger">*</span></label>
                         <select class="form-select @error('venue_id') is-invalid @enderror" id="venue_id" name="venue_id" required>
-                            <option value="">— Vyberte schválené místo —</option>
+                            <option value="">Vyberte místo</option>
                             @foreach ($venues as $venue)
                                 <option value="{{ $venue->id }}" @selected((string) old('venue_id', $event?->venue_id) === (string) $venue->id)>
                                     {{ $venue->name }} ({{ $venue->city }})
@@ -83,7 +83,7 @@
                     <div class="col-md-6">
                         <label for="category_id" class="form-label">Kategorie <span class="text-danger">*</span></label>
                         <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                            <option value="">— Vyberte kategorii —</option>
+                            <option value="">Vyberte kategorii</option>
                             @foreach ($categoryTree as $item)
                                 <option value="{{ $item['category']->id }}" @selected((string) old('category_id', $event?->category_id) === (string) $item['category']->id)>
                                     {{ $item['label'] }}
@@ -139,7 +139,7 @@
                             id="capacity"
                             name="capacity"
                             value="{{ old('capacity', $event?->capacity) }}"
-                            placeholder="Prázdné = neomezená"
+                            placeholder="Neomezená"
                         >
                         @error('capacity')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -162,13 +162,13 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="payment_note" class="form-label">Pokyny k platbě <span class="text-muted small">(nepovinné – např. číslo účtu u placených akcí)</span></label>
+                    <label for="payment_note" class="form-label">Pokyny k platbě <span class="text-muted small">(nepovinné)</span></label>
                     <textarea
                         class="form-control @error('payment_note') is-invalid @enderror"
                         id="payment_note"
                         name="payment_note"
                         rows="2"
-                        placeholder="Např. Číslo účtu 123456/0100, do poznámky uveďte své uživatelské jméno."
+                        placeholder="Číslo účtu, poznámka k platbě..."
                     >{{ old('payment_note', $event?->payment_note) }}</textarea>
                     @error('payment_note')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -188,7 +188,7 @@
                 @endif
 
                 <div class="mb-0">
-                    <label for="cover" class="form-label">Titulní fotka <span class="text-muted small">(nepovinné – JPG, PNG, WebP, max 2 MB)</span></label>
+                    <label for="cover" class="form-label">Titulní fotka <span class="text-muted small">(nepovinné, max 2 MB)</span></label>
                     <input
                         type="file"
                         class="form-control @error('cover') is-invalid @enderror"
@@ -208,7 +208,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h2 class="h5 mb-0">Typy vstupného <span class="text-danger">*</span></h2>
-                        <div class="small text-muted">Zadejte alespoň jeden typ (cena 0 = vstup zdarma).</div>
+                        <div class="small text-muted">Cena 0 Kč = vstup zdarma.</div>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-primary" id="add-ticket-btn">+ Přidat typ vstupného</button>
                 </div>
@@ -228,7 +228,7 @@
                                     class="form-control form-control-sm @error("tickets.{$index}.name") is-invalid @enderror"
                                     name="tickets[{{ $index }}][name]"
                                     value="{{ $ticket['name'] ?? '' }}"
-                                    placeholder="Např. Základní / Student / VIP"
+                                    placeholder="Např. Základní"
                                     required
                                 >
                                 @error("tickets.{$index}.name")
@@ -258,7 +258,7 @@
                                     class="form-control form-control-sm @error("tickets.{$index}.capacity") is-invalid @enderror"
                                     name="tickets[{{ $index }}][capacity]"
                                     value="{{ $ticket['capacity'] ?? '' }}"
-                                    placeholder="Bez omezení"
+                                    placeholder="Neomezená"
                                 >
                                 @error("tickets.{$index}.capacity")
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -302,7 +302,7 @@
                     <input type="hidden" name="tickets[${nextIndex}][id]" value="">
                     <div class="col-md-5">
                         <label class="form-label small mb-1">Název vstupenky <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-sm" name="tickets[${nextIndex}][name]" placeholder="Např. VIP / Student" required>
+                        <input type="text" class="form-control form-control-sm" name="tickets[${nextIndex}][name]" placeholder="Např. Student" required>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small mb-1">Cena (Kč) <span class="text-danger">*</span></label>
@@ -310,7 +310,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small mb-1">Kapacita typu (nepovinné)</label>
-                        <input type="number" min="1" class="form-control form-control-sm" name="tickets[${nextIndex}][capacity]" placeholder="Bez omezení">
+                        <input type="number" min="1" class="form-control form-control-sm" name="tickets[${nextIndex}][capacity]" placeholder="Neomezená">
                     </div>
                     <div class="col-md-1 d-flex align-items-end pt-4">
                         <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-ticket-btn" title="Odebrat">&times;</button>

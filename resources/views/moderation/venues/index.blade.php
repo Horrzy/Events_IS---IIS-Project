@@ -107,7 +107,7 @@
                                                 type="text"
                                                 name="rejection_reason"
                                                 class="form-control form-control-sm"
-                                                placeholder="Důvod zamítnutí..."
+                                                placeholder="Důvod zamítnutí"
                                                 required
                                             >
                                             <button type="submit" class="btn btn-sm btn-danger text-nowrap">Potvrdit zamítnutí</button>

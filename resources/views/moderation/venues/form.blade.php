@@ -111,7 +111,7 @@
                         <div class="mb-4">
                             <label for="photo" class="form-label">
                                 {{ $venue?->photo_path ? 'Nahradit fotku' : 'Fotka místa' }}
-                                <span class="text-muted small">(nepovinné – JPG, PNG, WebP, max 2 MB)</span>
+                                <span class="text-muted small">(nepovinné, max 2 MB)</span>
                             </label>
                             <input
                                 type="file"

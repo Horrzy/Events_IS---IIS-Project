@@ -32,7 +32,7 @@
                                 type="text"
                                 name="q"
                                 class="form-control"
-                                placeholder="Název akce, téma nebo klíčové slovo..."
+                                placeholder="Hledat událost..."
                             >
                         </div>
                         <div class="d-flex gap-2">

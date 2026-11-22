@@ -39,7 +39,7 @@
                         <div class="mb-3">
                             <label for="parent_id" class="form-label">Nadřazená kategorie <span class="text-muted small">(nepovinné)</span></label>
                             <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                <option value="">— Hlavní kategorie (bez nadřazené) —</option>
+                                <option value="">Žádná (hlavní kategorie)</option>
                                 @foreach ($parentOptions as $option)
                                     <option
                                         value="{{ $option['category']->id }}"
@@ -49,7 +49,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <div class="form-text">Maximální hloubka hierarchie jsou 4 úrovně.</div>
+                            <div class="form-text">Max. 4 úrovně.</div>
                             @error('parent_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
