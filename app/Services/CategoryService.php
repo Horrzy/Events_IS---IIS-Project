@@ -35,11 +35,7 @@ class CategoryService
         return $slug;
     }
 
-    /**
-     * Vrátí zploštěný strom schválených kategorií pro výpis nebo <select>.
-     *
-     * @return array<int, array{category: Category, depth: int, label: string}>
-     */
+    // Return a flattened tree of approved categories for listings or select inputs
     public function getApprovedTree(?int $excludeBranchOfId = null): array
     {
         $categories = Category::query()
@@ -55,7 +51,6 @@ class CategoryService
         $result = [];
 
         $walk = function (int $parentId, int $depth) use (&$walk, $byParent, $excludedIds, &$result): void {
-            /** @var Collection<int, Category> $children */
             $children = $byParent->get($parentId, collect());
             foreach ($children as $category) {
                 if (in_array($category->id, $excludedIds, true)) {
@@ -80,11 +75,7 @@ class CategoryService
         return $result;
     }
 
-    /**
-     * Vrátí ID dané kategorie a všech jejích schválených podkategorií (pro filtrování událostí).
-     *
-     * @return array<int, int>
-     */
+    // Return IDs of the category and all its approved subcategories
     public function getDescendantIds(int $categoryId): array
     {
         $categories = Category::query()
@@ -94,10 +85,7 @@ class CategoryService
         return $this->collectBranchIds($categories, $categoryId);
     }
 
-    /**
-     * Ověří, že vybraný rodič je platný (schválený, bez cyklu a max. hloubka 4).
-     * Vrací českou chybovou hlášku, nebo null pokud je vše v pořádku.
-     */
+    // Validate that the parent is approved, acyclic, and within max depth; returns an error message or null
     public function validateParent(?int $parentId, ?Category $editing = null): ?string
     {
         if ($parentId === null) {
@@ -113,7 +101,7 @@ class CategoryService
             return 'Nadřazená kategorie musí existovat a být schválená.';
         }
 
-        // Kontrola cyklu a výpočet hloubky nadřazeného uzlu
+        // Check for cycles and compute parent depth
         $parentDepth = 1;
         $cursor = $parent;
         $visited = [$parent->id];
@@ -142,10 +130,6 @@ class CategoryService
         return null;
     }
 
-    /**
-     * @param Collection<int, Category> $categories
-     * @return array<int, int>
-     */
     private function collectBranchIds(Collection $categories, int $rootId): array
     {
         $byParent = $categories->groupBy(fn (Category $c) => $c->parent_id ?? 0);

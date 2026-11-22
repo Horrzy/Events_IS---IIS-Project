@@ -9,11 +9,7 @@ use Illuminate\Support\Collection;
 
 class IcsService
 {
-    /**
-     * Vygeneruje platný obsah souboru .ics (RFC 5545) pro seznam událostí.
-     *
-     * @param Collection<int, Event> $events
-     */
+    // Generate RFC 5545 .ics calendar content for the given events
     public function generate(Collection $events, string $host = 'iis.local'): string
     {
         $lines = [

@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $petr = $this->upsertUser('petr', 'Petr Dvořák', 'petr@iis.local', 'User1234!', 'user');
         $jana = $this->upsertUser('jana', 'Jana Svobodová', 'jana@iis.local', 'User1234!', 'user');
 
-        // 1. Místa konání
+        // 1. Venues
         $fit = $this->upsertVenue('FIT VUT', 'Božetěchova 2', 'Brno', '612 66', 'Fakulta informačních technologií VUT v Brně, moderní posluchárny a auly.', 'approved', $admin->id, $moderator->id);
         $divadlo = $this->upsertVenue('Divadlo Husa na provázku', 'Zelný trh 9', 'Brno', '602 00', 'Komorní divadlo v historickém centru Brna.', 'approved', $admin->id, $moderator->id);
         $fleda = $this->upsertVenue('Klub Fléda', 'Štefánikova 24', 'Brno', '602 00', 'Hudební klub pro koncerty a večerní akce.', 'approved', $petr->id, $moderator->id);
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         $ntk = $this->upsertVenue('Národní technická knihovna', 'Technická 6', 'Praha', '160 80', 'Ballingův sál a studijní prostory pro odborné přednášky.', 'approved', $petr->id, $moderator->id);
         $this->upsertVenue('Kavárna Pražírna', 'Radnická 5', 'Brno', '602 00', 'Komorní prostor pro setkání a čtení.', 'pending', $jana->id, null);
 
-        // 2. Hierarchické kategorie
+        // 2. Hierarchical categories
         $kultura = $this->upsertCategory('Kultura', 'kultura', null, 'Kulturní a umělecké akce.', 'approved', $admin->id, $moderator->id);
         $hudba = $this->upsertCategory('Hudba', 'hudba', $kultura->id, 'Hudební vystoupení a večery.', 'approved', $admin->id, $moderator->id);
         $koncert = $this->upsertCategory('Koncert', 'koncert', $hudba->id, 'Živé koncerty kapel i sólistů.', 'approved', $admin->id, $moderator->id);
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         $tech = $this->upsertCategory('Technologie', 'technologie', null, 'IT konference, meetupy a hackathony.', 'approved', $admin->id, $moderator->id);
         $this->upsertCategory('Festival', 'festival', $kultura->id, 'Vícedenní hudební a kulturní festivaly.', 'pending', $jana->id, null);
 
-        // 3. Události (proběhlá, nadcházející, čekající, koncept)
+        // 3. Events (past, upcoming, pending, draft)
         $pastConcert = $this->upsertEvent(
             'koncert-komorni-hudby',
             'Koncert komorní hudby',
@@ -158,7 +158,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 4. Registrace, hodnocení a komentáře u proběhlé události
+        // 4. Registrations, ratings, and comments for the past event
         $concertTicket = $pastConcert->ticketTypes()->first();
         if ($concertTicket !== null) {
             $this->upsertRegistration($pastConcert->id, $jana->id, $concertTicket->id, (float) $concertTicket->price, 'confirmed', $petr->id);
@@ -188,7 +188,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 5. Registrace u nadcházejících událostí (potvrzená i čekající na platbu)
+        // 5. Registrations for upcoming events (confirmed and pending payment)
         $freeWorkshopTicket = $upcomingWorkshop->ticketTypes()->where('price', 0)->first();
         $vipWorkshopTicket = $upcomingWorkshop->ticketTypes()->where('price', '>', 0)->first();
         if ($freeWorkshopTicket !== null) {
@@ -288,9 +288,6 @@ class DatabaseSeeder extends Seeder
         return $category;
     }
 
-    /**
-     * @param array<int, array{0: string, 1: int|float, 2: int|null}> $tickets
-     */
     private function upsertEvent(
         string $slug,
         string $title,

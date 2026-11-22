@@ -1,4 +1,4 @@
-# Zákaz spouštění PHP skriptů v nahraných souborech
+# Prevent executing PHP scripts in uploaded files
 <FilesMatch "\.(php|phtml|php3|php4|php5|phar)$">
     Require all denied
 </FilesMatch>

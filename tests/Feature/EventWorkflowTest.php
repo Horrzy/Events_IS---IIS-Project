@@ -41,7 +41,7 @@ class EventWorkflowTest extends TestCase
         $childCat->proposed_by = $moderator->id;
         $childCat->save();
 
-        // 1. Pořadatel založí událost s kapacitou 1 a placenou vstupenkou a odešle ke schválení
+        // 1. Organizer creates an event with capacity 1 and a paid ticket and submits it for approval
         $this->actingAs($organizer)->post('/udalosti/nova', [
             'title' => 'Testovací workshop',
             'description' => 'Popis testovacího workshopu.',
@@ -59,17 +59,17 @@ class EventWorkflowTest extends TestCase
         $event = Event::where('title', 'Testovací workshop')->firstOrFail();
         $this->assertSame('pending', $event->status);
 
-        // 2. Moderátor událost schválí
+        // 2. Moderator approves the event
         $this->actingAs($moderator)->post("/moderace/udalosti/{$event->id}/schvalit")->assertRedirect();
         $event->refresh();
         $this->assertSame('approved', $event->status);
 
-        // 3. Filtrování podle nadřazené kategorie najde událost v podkategorii
+        // 3. Filtering by parent category includes events in its subcategory
         $this->get('/udalosti?category_id=' . $parentCat->id)
             ->assertStatus(200)
             ->assertSee('Testovací workshop');
 
-        // 4. Účastník se zaregistruje -> stav pending (placená)
+        // 4. Participant registers for a paid ticket and starts in pending status
         $ticket = TicketType::where('event_id', $event->id)->firstOrFail();
         $this->actingAs($participant)
             ->post("/udalosti/{$event->slug}/registrace", ['ticket_type_id' => $ticket->id])
@@ -78,7 +78,7 @@ class EventWorkflowTest extends TestCase
         $registration = Registration::where('event_id', $event->id)->where('user_id', $participant->id)->firstOrFail();
         $this->assertSame('pending', $registration->status);
 
-        // 5. Druhý účastník narazí na plnou kapacitu (1/1)
+        // 5. Second participant is rejected because capacity is full (1/1)
         $this->actingAs($secondParticipant)
             ->post("/udalosti/{$event->slug}/registrace", ['ticket_type_id' => $ticket->id])
             ->assertSessionHas('error');
@@ -87,14 +87,14 @@ class EventWorkflowTest extends TestCase
             'user_id' => $secondParticipant->id,
         ]);
 
-        // 6. Správce události potvrdí úhradu
+        // 6. Event manager confirms payment
         $this->actingAs($organizer)
             ->post("/registrace/{$registration->id}/potvrdit")
             ->assertSessionHas('success');
         $registration->refresh();
         $this->assertSame('confirmed', $registration->status);
 
-        // 6b. Správce nemůže nastavit kapacitu vstupenky vyšší než kapacitu události
+        // 6b. Manager cannot set ticket capacity higher than event capacity
         $this->actingAs($organizer)->post("/udalosti/{$event->id}/upravit", [
             'title' => 'Testovací workshop',
             'description' => 'Popis testovacího workshopu.',
@@ -108,7 +108,7 @@ class EventWorkflowTest extends TestCase
             ],
         ])->assertSessionHasErrors('capacity');
 
-        // 6c. Úprava schválené události pořadatelem ji vrátí do pending ke schválení moderátorem
+        // 6c. Editing an approved event returns it to pending moderation
         $this->actingAs($organizer)->post("/udalosti/{$event->id}/upravit", [
             'title' => 'Testovací workshop upravený',
             'description' => 'Popis testovacího workshopu.',
@@ -124,12 +124,12 @@ class EventWorkflowTest extends TestCase
         $event->refresh();
         $this->assertSame('pending', $event->status);
 
-        // Moderátor znovu schválí
+        // Moderator approves the updated event again
         $this->actingAs($moderator)->post("/moderace/udalosti/{$event->id}/schvalit")->assertRedirect();
         $event->refresh();
         $this->assertSame('approved', $event->status);
 
-        // 7. Export osobního kalendáře .ics obsahuje událost
+        // 7. Personal .ics calendar export contains the event
         $this->actingAs($participant)
             ->get('/muj-kalendar.ics')
             ->assertStatus(200)
@@ -137,13 +137,13 @@ class EventWorkflowTest extends TestCase
             ->assertSee('BEGIN:VCALENDAR', false)
             ->assertSee('Testovací workshop upravený', false);
 
-        // 8. Před koncem události nelze hodnotit ani komentovat
+        // 8. Rating and commenting are blocked before the event ends
         $this->actingAs($participant)
             ->post("/udalosti/{$event->slug}/hodnoceni", ['stars' => 5])
             ->assertSessionHas('error');
         $this->assertDatabaseCount('ratings', 0);
 
-        // 9. Po skončení události může potvrzený účastník hodnotit i komentovat (max 1 komentář = přepis)
+        // 9. After the event ends, a confirmed participant can rate and comment (overwriting previous comment)
         $event->starts_at = now()->subDays(2);
         $event->ends_at = now()->subDay();
         $event->save();
@@ -165,14 +165,14 @@ class EventWorkflowTest extends TestCase
         $this->assertSame('Upravený komentář!', $comment->body);
         $this->assertFalse($comment->is_hidden);
 
-        // 10. Moderátor skryje komentář
+        // 10. Moderator hides the comment
         $this->actingAs($moderator)
             ->post("/moderace/komentare/{$comment->id}/skryt")
             ->assertSessionHas('success');
         $comment->refresh();
         $this->assertTrue($comment->is_hidden);
 
-        // 11. Admin nemůže smazat uživatele, který má hodnocení/komentář
+        // 11. Admin cannot delete a user who has ratings or comments
         $admin = $this->createUser('hlavniadmin', 'admin');
         $this->actingAs($admin)
             ->post("/admin/uzivatele/{$participant->id}/smazat")

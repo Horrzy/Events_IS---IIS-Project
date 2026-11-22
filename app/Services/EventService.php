@@ -47,12 +47,7 @@ class EventService
         return $slug;
     }
 
-    /**
-     * Uloží novou nebo upravenou událost včetně typů vstupenek v jedné databázové transakci.
-     *
-     * @param array<string, mixed> $data
-     * @param array<int, array{id?: int|null, name: string, price: string|int|float, capacity?: int|null}> $tickets
-     */
+    // Save a new or updated event with its ticket types in a single transaction
     public function saveEvent(
         ?Event $event,
         User $manager,
@@ -120,7 +115,7 @@ class EventService
                 $model->status = $submitImmediately ? 'pending' : 'draft';
                 $model->submitted_at = $submitImmediately ? now() : null;
             } elseif ($model->status === 'approved') {
-                // Jakákoli úprava schválené události pořadatelem ji vrací ke schválení moderátorem
+                // Any edit of an approved event returns it to pending moderation
                 $model->status = 'pending';
                 $model->submitted_at = now();
                 $model->reviewed_by = null;
@@ -163,11 +158,7 @@ class EventService
         $event->save();
     }
 
-    /**
-     * Najde jiné schválené nebo čekající události ve stejném místě s překrývajícím se časem.
-     *
-     * @return Collection<int, Event>
-     */
+    // Find other approved or pending events at the same venue with overlapping times
     public function findVenueCollisions(Event $event): Collection
     {
         return Event::query()
@@ -180,9 +171,6 @@ class EventService
             ->get();
     }
 
-    /**
-     * @param array<int, array{id?: int|null, name: string, price: string|int|float, capacity?: int|null}> $tickets
-     */
     private function validateCapacities(?Event $event, ?int $eventCapacity, array $tickets): void
     {
         if ($event !== null && $eventCapacity !== null) {
@@ -221,9 +209,6 @@ class EventService
         }
     }
 
-    /**
-     * @param array<int, array{id?: int|null, name: string, price: string|int|float, capacity?: int|null}> $tickets
-     */
     private function syncTicketTypes(Event $event, array $tickets): void
     {
         $existing = $event->ticketTypes()->get()->keyBy('id');
@@ -233,7 +218,6 @@ class EventService
             $ticketId = isset($ticketData['id']) && $ticketData['id'] !== '' ? (int) $ticketData['id'] : null;
 
             if ($ticketId !== null && $existing->has($ticketId)) {
-                /** @var TicketType $ticket */
                 $ticket = $existing->get($ticketId);
                 $ticket->update([
                     'name' => trim((string) $ticketData['name']),

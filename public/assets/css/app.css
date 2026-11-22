@@ -45,7 +45,7 @@ footer.bg-white,
     border-bottom-color: var(--app-border) !important;
 }
 
-/* Primární tlačítka a odkazy v barvách Dark Blue & Yellow Sapling */
+/* Primary buttons and links */
 .btn-primary {
     background-color: var(--app-dark-blue) !important;
     border-color: var(--app-dark-blue) !important;
@@ -103,7 +103,7 @@ a:hover {
     color: var(--app-dark-blue);
 }
 
-/* Dark Blue & Yellow Sapling horní navbar */
+/* Top navigation bar */
 .app-navbar {
     background: linear-gradient(90deg, var(--app-dark-blue) 0%, var(--app-dark-blue-mid) 100%);
     border-bottom: 2px solid var(--app-sapling);
@@ -142,7 +142,7 @@ a:hover {
     font-weight: 600;
 }
 
-/* Tlačítko uživatelského menu v tmavém navbaru */
+/* User menu button in navbar */
 .user-menu-btn {
     border: 1px solid rgba(226, 219, 164, 0.45);
     background-color: rgba(255, 255, 255, 0.08);
@@ -178,7 +178,7 @@ a:hover {
     border: 1px solid rgba(226, 219, 164, 0.45);
 }
 
-/* Karty a kontejnery */
+/* Cards and containers */
 .card {
     border: 1px solid var(--app-border);
     border-radius: 0.75rem;
@@ -217,7 +217,7 @@ a:hover {
     color: var(--app-sapling-bright) !important;
 }
 
-/* Hero karta na úvodní stránce */
+/* Homepage hero card */
 .hero-card {
     background: linear-gradient(135deg, var(--app-dark-blue) 0%, var(--app-dark-blue-mid) 100%);
     color: #ffffff;

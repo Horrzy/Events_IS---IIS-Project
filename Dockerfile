@@ -1,7 +1,7 @@
-# PHP 8.1 + Apache odpovídá prostředí na školním serveru Eva
+# PHP 8.1 with Apache matching the school server environment
 FROM php:8.1-apache
 
-# Systémové knihovny a PHP rozšíření pro MySQL, obrázky (GD) a archivy
+# Install system libraries and PHP extensions for MySQL, GD, and zip
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpng-dev libjpeg62-turbo-dev libfreetype6-dev libzip-dev unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -9,7 +9,7 @@ RUN apt-get update \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
-# Apache musí směřovat do složky public/, ne do kořene projektu
+# Point Apache document root to public/
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri 's#/var/www/html#${APACHE_DOCUMENT_ROOT}#g' /etc/apache2/sites-available/000-default.conf
 

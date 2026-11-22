@@ -7,9 +7,7 @@ use Illuminate\Foundation\Application;
 
 trait CreatesApplication
 {
-    /**
-     * Creates the application.
-     */
+    // Bootstrap and return the application instance for tests
     public function createApplication(): Application
     {
         $app = require __DIR__.'/../bootstrap/app.php';

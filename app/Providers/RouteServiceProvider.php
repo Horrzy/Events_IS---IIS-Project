@@ -10,18 +10,10 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to your application's "home" route.
-     *
-     * Typically, users are redirected here after authentication.
-     *
-     * @var string
-     */
+    // Default home route after authentication
     public const HOME = '/';
 
-    /**
-     * Define your route model bindings, pattern filters, and other route configuration.
-     */
+    // Configure rate limiting and load route files
     public function boot(): void
     {
         RateLimiter::for('api', function (Request $request) {

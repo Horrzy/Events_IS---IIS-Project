@@ -12,17 +12,12 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+    // Register application services
     public function register(): void
     {
-        //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
+    // Bootstrap application services and share moderation counts with views
     public function boot(): void
     {
         Paginator::useBootstrapFive();

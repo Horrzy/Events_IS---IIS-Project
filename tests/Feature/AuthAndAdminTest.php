@@ -124,7 +124,7 @@ class AuthAndAdminTest extends TestCase
         $user->role = 'user';
         $user->save();
 
-        // Změna role adminem zvýší auth_version z 1 na 2
+        // Role change by admin increments auth_version from 1 to 2
         $this->actingAs($admin)->post("/admin/uzivatele/{$user->id}/upravit", [
             'name' => 'Pepa',
             'email' => 'pepa@example.test',
@@ -134,7 +134,7 @@ class AuthAndAdminTest extends TestCase
         $user->refresh();
         $this->assertSame(2, $user->auth_version);
 
-        // Stará session s auth_version=1 je okamžitě odhlášena
+        // Existing session with auth_version=1 is immediately logged out
         $this->actingAs($user)
             ->withSession(['auth_version' => 1])
             ->get('/profil')

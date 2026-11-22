@@ -16,7 +16,6 @@ class RegistrationService
     public function register(User $user, Event $event, int $ticketTypeId): Registration
     {
         return DB::transaction(function () use ($user, $event, $ticketTypeId): Registration {
-            /** @var Event $lockedEvent */
             $lockedEvent = Event::whereKey($event->id)->lockForUpdate()->firstOrFail();
 
             if ($lockedEvent->status !== 'approved') {
@@ -37,7 +36,6 @@ class RegistrationService
                 throw new DomainException('Na tuto událost již máte aktivní registraci.');
             }
 
-            /** @var TicketType|null $ticketType */
             $ticketType = TicketType::query()
                 ->where('id', $ticketTypeId)
                 ->where('event_id', $lockedEvent->id)

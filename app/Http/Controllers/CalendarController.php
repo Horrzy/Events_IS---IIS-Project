@@ -49,12 +49,7 @@ class CalendarController extends Controller
         ]);
     }
 
-    /**
-     * Sloučí schválené události, na které je uživatel registrovaný (pending/confirmed),
-     * a schválené události, které sám pořádá.
-     *
-     * @return Collection<int, array{event: Event, relation: string, registration_status: string|null}>
-     */
+    // Merge approved events the user registered for with approved events they manage
     private function collectUserEvents(int $userId): Collection
     {
         $byEventId = [];
