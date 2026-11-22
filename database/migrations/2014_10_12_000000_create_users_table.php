@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name', 120);
             $table->enum('role', ['user', 'moderator', 'admin'])->default('user');
             $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('auth_version')->default(1);
             $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

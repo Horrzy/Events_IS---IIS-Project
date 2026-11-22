@@ -136,9 +136,14 @@ class AdminUserController extends Controller
                 ->withInput();
         }
 
+        $roleChanged = $user->role !== $validated['role'];
+
         $user->name = $validated['name'];
         $user->email = mb_strtolower($validated['email']);
         $user->role = $validated['role'];
+        if ($roleChanged) {
+            $user->auth_version = ((int) $user->auth_version) + 1;
+        }
         $user->save();
 
         return redirect()
@@ -156,7 +161,9 @@ class AdminUserController extends Controller
             'password.confirmed' => 'Potvrzení hesla se neshoduje.',
         ]);
 
-        $user->update(['password' => $validated['password']]);
+        $user->password = $validated['password'];
+        $user->auth_version = ((int) $user->auth_version) + 1;
+        $user->save();
 
         return redirect()
             ->route('admin.users.edit', $user)
@@ -174,6 +181,7 @@ class AdminUserController extends Controller
         }
 
         $user->is_active = !$user->is_active;
+        $user->auth_version = ((int) $user->auth_version) + 1;
         $user->save();
 
         $statusText = $user->is_active ? 'aktivován' : 'deaktivován';
@@ -191,11 +199,22 @@ class AdminUserController extends Controller
             return back()->with('error', 'Nelze smazat posledního aktivního administrátora.');
         }
 
+        $hasReferences = $user->managedEvents()->exists()
+            || $user->registrations()->exists()
+            || $user->proposedVenues()->exists()
+            || $user->proposedCategories()->exists()
+            || $user->ratings()->exists()
+            || $user->comments()->exists();
+
+        if ($hasReferences) {
+            return back()->with('error', 'Uživatele nelze smazat, protože má v systému navázané záznamy (události, návrhy, registrace, hodnocení nebo komentáře). Místo toho účet deaktivujte.');
+        }
+
         try {
             $username = $user->username;
             $user->delete();
         } catch (QueryException) {
-            return back()->with('error', 'Uživatele nelze smazat, protože má v systému navázané záznamy (události, návrhy nebo registrace). Místo toho účet deaktivujte.');
+            return back()->with('error', 'Uživatele nelze smazat, protože má v systému navázané záznamy. Místo toho účet deaktivujte.');
         }
 
         return redirect()

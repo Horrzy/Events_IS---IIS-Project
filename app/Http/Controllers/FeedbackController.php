@@ -57,15 +57,19 @@ class FeedbackController extends Controller
             'body.max' => 'Komentář může mít maximálně :max znaků.',
         ]);
 
-        Comment::create([
-            'event_id' => $event->id,
-            'user_id' => $user->id,
-            'body' => trim($validated['body']),
-        ]);
+        $existing = Comment::where('event_id', $event->id)->where('user_id', $user->id)->first();
+        if ($existing !== null && $existing->is_hidden) {
+            return back()->with('error', 'Váš komentář byl skryt moderátorem a nelze jej upravit.');
+        }
+
+        Comment::updateOrCreate(
+            ['event_id' => $event->id, 'user_id' => $user->id],
+            ['body' => trim($validated['body'])]
+        );
 
         return redirect()
             ->route('events.show', $event->slug)
-            ->with('success', 'Komentář byl přidán.');
+            ->with('success', $existing ? 'Komentář byl upraven.' : 'Komentář byl přidán.');
     }
 
     public function destroyComment(Request $request, Comment $comment): RedirectResponse

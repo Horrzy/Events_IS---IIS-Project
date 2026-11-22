@@ -28,6 +28,7 @@ class User extends Authenticatable
     protected $attributes = [
         'role' => 'user',
         'is_active' => true,
+        'auth_version' => 1,
     ];
 
     /**
@@ -47,6 +48,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'auth_version' => 'integer',
         'last_login_at' => 'datetime',
         'password' => 'hashed',
     ];

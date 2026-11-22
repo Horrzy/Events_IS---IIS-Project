@@ -14,7 +14,7 @@ class EnsureSessionIsValid
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            $user = $request->user();
+            $user = $request->user()?->fresh();
 
             if ($user === null || !$user->is_active) {
                 Auth::logout();
@@ -24,6 +24,21 @@ class EnsureSessionIsValid
                 return redirect()
                     ->route('login')
                     ->with('error', 'Váš účet byl deaktivován.');
+            }
+
+            $sessionVersion = $request->session()->get('auth_version');
+            if ($sessionVersion !== null && (int) $sessionVersion !== (int) $user->auth_version) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()
+                    ->route('login')
+                    ->with('error', 'Vaše oprávnění nebo přihlašovací údaje byly změněny. Přihlaste se prosím znovu.');
+            }
+
+            if ($sessionVersion === null) {
+                $request->session()->put('auth_version', (int) $user->auth_version);
             }
 
             $timeoutSeconds = (int) config('session.lifetime', 30) * 60;

@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Venue;
 use App\Services\CategoryService;
 use App\Services\EventService;
+use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -122,6 +123,9 @@ class EventController extends Controller
         $userRating = $user !== null
             ? $event->ratings()->where('user_id', $user->id)->first()
             : null;
+        $userComment = $user !== null
+            ? $event->comments()->where('user_id', $user->id)->first()
+            : null;
 
         $canGiveFeedback = $user !== null
             && $event->status === 'approved'
@@ -144,6 +148,7 @@ class EventController extends Controller
             'ratingsCount' => $ratingsCount,
             'averageRating' => $averageRating,
             'userRating' => $userRating,
+            'userComment' => $userComment,
             'canGiveFeedback' => $canGiveFeedback,
             'comments' => $comments,
         ]);
@@ -181,15 +186,19 @@ class EventController extends Controller
         $validated = $this->validateEvent($request);
         $submitImmediately = $request->input('action') === 'submit';
 
-        $event = $eventService->saveEvent(
-            null,
-            $request->user(),
-            $validated,
-            $validated['tickets'],
-            $request->file('cover'),
-            false,
-            $submitImmediately
-        );
+        try {
+            $event = $eventService->saveEvent(
+                null,
+                $request->user(),
+                $validated,
+                $validated['tickets'],
+                $request->file('cover'),
+                false,
+                $submitImmediately
+            );
+        } catch (DomainException $e) {
+            return back()->withErrors(['capacity' => $e->getMessage()])->withInput();
+        }
 
         $message = $submitImmediately
             ? "Událost „{$event->title}“ byla vytvořena a odeslána ke schválení moderátorem."
@@ -229,20 +238,29 @@ class EventController extends Controller
 
         $validated = $this->validateEvent($request);
         $submitImmediately = $request->input('action') === 'submit';
+        $wasApproved = $event->status === 'approved';
 
-        $eventService->saveEvent(
-            $event,
-            $request->user(),
-            $validated,
-            $validated['tickets'],
-            $request->file('cover'),
-            $request->boolean('remove_cover'),
-            $submitImmediately
-        );
+        try {
+            $eventService->saveEvent(
+                $event,
+                $request->user(),
+                $validated,
+                $validated['tickets'],
+                $request->file('cover'),
+                $request->boolean('remove_cover'),
+                $submitImmediately
+            );
+        } catch (DomainException $e) {
+            return back()->withErrors(['capacity' => $e->getMessage()])->withInput();
+        }
+
+        $message = $wasApproved
+            ? "Událost „{$event->title}“ byla upravena a znovu odeslána ke schválení moderátorem."
+            : "Událost „{$event->title}“ byla aktualizována.";
 
         return redirect()
             ->route('events.mine')
-            ->with('success', "Událost „{$event->title}“ byla aktualizována.");
+            ->with('success', $message);
     }
 
     public function submit(Request $request, Event $event, EventService $eventService): RedirectResponse

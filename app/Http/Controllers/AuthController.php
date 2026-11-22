@@ -51,6 +51,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
         $request->session()->put('last_activity_at', now()->timestamp);
+        $request->session()->put('auth_version', (int) $user->auth_version);
 
         return redirect()
             ->route('home')
@@ -95,6 +96,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
         $request->session()->put('last_activity_at', now()->timestamp);
+        $request->session()->put('auth_version', (int) $user->auth_version);
 
         return redirect()
             ->intended(route('home'))

@@ -94,13 +94,48 @@ class EventWorkflowTest extends TestCase
         $registration->refresh();
         $this->assertSame('confirmed', $registration->status);
 
+        // 6b. Správce nemůže nastavit kapacitu vstupenky vyšší než kapacitu události
+        $this->actingAs($organizer)->post("/udalosti/{$event->id}/upravit", [
+            'title' => 'Testovací workshop',
+            'description' => 'Popis testovacího workshopu.',
+            'starts_at' => now('Europe/Prague')->addDays(3)->format('Y-m-d\TH:i'),
+            'ends_at' => now('Europe/Prague')->addDays(3)->addHours(2)->format('Y-m-d\TH:i'),
+            'venue_id' => $venue->id,
+            'category_id' => $childCat->id,
+            'capacity' => 1,
+            'tickets' => [
+                ['id' => $ticket->id, 'name' => 'Placený vstup', 'price' => 200, 'capacity' => 5],
+            ],
+        ])->assertSessionHasErrors('capacity');
+
+        // 6c. Úprava schválené události pořadatelem ji vrátí do pending ke schválení moderátorem
+        $this->actingAs($organizer)->post("/udalosti/{$event->id}/upravit", [
+            'title' => 'Testovací workshop upravený',
+            'description' => 'Popis testovacího workshopu.',
+            'starts_at' => now('Europe/Prague')->addDays(3)->format('Y-m-d\TH:i'),
+            'ends_at' => now('Europe/Prague')->addDays(3)->addHours(2)->format('Y-m-d\TH:i'),
+            'venue_id' => $venue->id,
+            'category_id' => $childCat->id,
+            'capacity' => 2,
+            'tickets' => [
+                ['id' => $ticket->id, 'name' => 'Placený vstup', 'price' => 200, 'capacity' => 2],
+            ],
+        ])->assertRedirect('/moje-udalosti');
+        $event->refresh();
+        $this->assertSame('pending', $event->status);
+
+        // Moderátor znovu schválí
+        $this->actingAs($moderator)->post("/moderace/udalosti/{$event->id}/schvalit")->assertRedirect();
+        $event->refresh();
+        $this->assertSame('approved', $event->status);
+
         // 7. Export osobního kalendáře .ics obsahuje událost
         $this->actingAs($participant)
             ->get('/muj-kalendar.ics')
             ->assertStatus(200)
             ->assertHeader('Content-Type', 'text/calendar; charset=utf-8')
             ->assertSee('BEGIN:VCALENDAR', false)
-            ->assertSee('Testovací workshop', false);
+            ->assertSee('Testovací workshop upravený', false);
 
         // 8. Před koncem události nelze hodnotit ani komentovat
         $this->actingAs($participant)
@@ -108,7 +143,7 @@ class EventWorkflowTest extends TestCase
             ->assertSessionHas('error');
         $this->assertDatabaseCount('ratings', 0);
 
-        // 9. Po skončení události může potvrzený účastník hodnotit i komentovat
+        // 9. Po skončení události může potvrzený účastník hodnotit i komentovat (max 1 komentář = přepis)
         $event->starts_at = now()->subDays(2);
         $event->ends_at = now()->subDay();
         $event->save();
@@ -121,8 +156,13 @@ class EventWorkflowTest extends TestCase
         $this->actingAs($participant)
             ->post("/udalosti/{$event->slug}/komentar", ['body' => 'Výborná akce!'])
             ->assertRedirect("/udalosti/{$event->slug}");
+        $this->actingAs($participant)
+            ->post("/udalosti/{$event->slug}/komentar", ['body' => 'Upravený komentář!'])
+            ->assertRedirect("/udalosti/{$event->slug}");
+        $this->assertDatabaseCount('comments', 1);
 
         $comment = Comment::where('event_id', $event->id)->firstOrFail();
+        $this->assertSame('Upravený komentář!', $comment->body);
         $this->assertFalse($comment->is_hidden);
 
         // 10. Moderátor skryje komentář
@@ -131,6 +171,13 @@ class EventWorkflowTest extends TestCase
             ->assertSessionHas('success');
         $comment->refresh();
         $this->assertTrue($comment->is_hidden);
+
+        // 11. Admin nemůže smazat uživatele, který má hodnocení/komentář
+        $admin = $this->createUser('hlavniadmin', 'admin');
+        $this->actingAs($admin)
+            ->post("/admin/uzivatele/{$participant->id}/smazat")
+            ->assertSessionHas('error');
+        $this->assertDatabaseHas('users', ['id' => $participant->id]);
     }
 
     private function createUser(string $username, string $role): User

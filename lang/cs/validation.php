@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'accepted' => 'Pole :attribute musí být přijato.',
+    'after' => 'Pole :attribute musí být datum po :date.',
+    'alpha_dash' => 'Pole :attribute může obsahovat pouze písmena, čísla, pomlčky a podtržítka.',
+    'array' => 'Pole :attribute musí být pole.',
+    'boolean' => 'Pole :attribute musí být pravda nebo nepravda.',
+    'confirmed' => 'Potvrzení pole :attribute se neshoduje.',
+    'current_password' => 'Současné heslo není správné.',
+    'date' => 'Pole :attribute není platné datum.',
+    'email' => 'Pole :attribute musí být platná e-mailová adresa.',
+    'exists' => 'Vybraná hodnota pole :attribute je neplatná.',
+    'file' => 'Pole :attribute musí být soubor.',
+    'image' => 'Pole :attribute musí být obrázek.',
+    'in' => 'Vybraná hodnota pole :attribute je neplatná.',
+    'integer' => 'Pole :attribute musí být celé číslo.',
+    'max' => [
+        'array' => 'Pole :attribute nesmí mít více než :max položek.',
+        'file' => 'Soubor :attribute nesmí být větší než :max kB.',
+        'numeric' => 'Pole :attribute nesmí být větší než :max.',
+        'string' => 'Pole :attribute nesmí být delší než :max znaků.',
+    ],
+    'mimes' => 'Pole :attribute musí být soubor typu: :values.',
+    'min' => [
+        'array' => 'Pole :attribute musí obsahovat alespoň :min položek.',
+        'file' => 'Soubor :attribute musí mít alespoň :min kB.',
+        'numeric' => 'Pole :attribute musí být alespoň :min.',
+        'string' => 'Pole :attribute musí mít alespoň :min znaků.',
+    ],
+    'numeric' => 'Pole :attribute musí být číslo.',
+    'required' => 'Pole :attribute je povinné.',
+    'string' => 'Pole :attribute musí být text.',
+    'unique' => 'Taková hodnota pole :attribute již existuje.',
+
+    'attributes' => [
+        'username' => 'uživatelské jméno',
+        'name' => 'jméno',
+        'email' => 'e-mail',
+        'password' => 'heslo',
+        'current_password' => 'současné heslo',
+        'role' => 'role',
+        'title' => 'název',
+        'description' => 'popis',
+        'starts_at' => 'začátek',
+        'ends_at' => 'konec',
+        'venue_id' => 'místo konání',
+        'category_id' => 'kategorie',
+        'capacity' => 'kapacita',
+        'street' => 'ulice',
+        'city' => 'město',
+        'postal_code' => 'PSČ',
+        'body' => 'komentář',
+        'stars' => 'hodnocení',
+    ],
+];

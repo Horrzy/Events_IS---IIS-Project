@@ -103,4 +103,41 @@ class AuthAndAdminTest extends TestCase
         $this->actingAs($regular)->get('/admin/uzivatele')->assertStatus(403);
         $this->actingAs($admin)->get('/admin/uzivatele')->assertStatus(200);
     }
+
+    public function test_auth_version_mismatch_invalidates_session_and_user_with_comments_cannot_be_deleted(): void
+    {
+        $admin = new User([
+            'username' => 'admin1',
+            'name' => 'Admin',
+            'email' => 'admin1@example.test',
+            'password' => 'Heslo1234!',
+        ]);
+        $admin->role = 'admin';
+        $admin->save();
+
+        $user = new User([
+            'username' => 'pepa',
+            'name' => 'Pepa',
+            'email' => 'pepa@example.test',
+            'password' => 'Heslo1234!',
+        ]);
+        $user->role = 'user';
+        $user->save();
+
+        // Změna role adminem zvýší auth_version z 1 na 2
+        $this->actingAs($admin)->post("/admin/uzivatele/{$user->id}/upravit", [
+            'name' => 'Pepa',
+            'email' => 'pepa@example.test',
+            'role' => 'moderator',
+        ])->assertRedirect('/admin/uzivatele');
+
+        $user->refresh();
+        $this->assertSame(2, $user->auth_version);
+
+        // Stará session s auth_version=1 je okamžitě odhlášena
+        $this->actingAs($user)
+            ->withSession(['auth_version' => 1])
+            ->get('/profil')
+            ->assertRedirect('/prihlaseni');
+    }
 }

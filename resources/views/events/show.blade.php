@@ -145,7 +145,9 @@
 
                                 <form method="POST" action="{{ route('events.comments.store', $event->slug) }}" novalidate>
                                     @csrf
-                                    <label for="body" class="form-label small fw-semibold">Přidat komentář</label>
+                                    <label for="body" class="form-label small fw-semibold">
+                                        {{ $userComment ? 'Váš komentář' : 'Přidat komentář' }}
+                                    </label>
                                     <textarea
                                         class="form-control form-control-sm mb-2 @error('body') is-invalid @enderror"
                                         id="body"
@@ -153,11 +155,13 @@
                                         rows="3"
                                         placeholder="Napište, jak se vám událost líbila..."
                                         required
-                                    >{{ old('body') }}</textarea>
+                                    >{{ old('body', $userComment?->body) }}</textarea>
                                     @error('body')
                                         <div class="invalid-feedback mb-2">{{ $message }}</div>
                                     @enderror
-                                    <button type="submit" class="btn btn-sm btn-outline-primary">Odeslat komentář</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        {{ $userComment ? 'Upravit komentář' : 'Odeslat komentář' }}
+                                    </button>
                                 </form>
                             </div>
                         @elseif (!$isPast)

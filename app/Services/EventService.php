@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Event;
+use App\Models\Registration;
 use App\Models\TicketType;
 use App\Models\User;
 use Carbon\Carbon;
+use DomainException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +62,12 @@ class EventService
         bool $removeCover = false,
         bool $submitImmediately = false
     ): Event {
+        $newCapacity = isset($data['capacity']) && $data['capacity'] !== ''
+            ? (int) $data['capacity']
+            : null;
+
+        $this->validateCapacities($event, $newCapacity, $tickets);
+
         $startsAtUtc = Carbon::parse((string) $data['starts_at'], self::DISPLAY_TIMEZONE)->utc();
         $endsAtUtc = Carbon::parse((string) $data['ends_at'], self::DISPLAY_TIMEZONE)->utc();
 
@@ -83,6 +91,7 @@ class EventService
             $manager,
             $data,
             $tickets,
+            $newCapacity,
             $startsAtUtc,
             $endsAtUtc,
             $newCoverPath,
@@ -100,9 +109,7 @@ class EventService
             $model->ends_at = $endsAtUtc;
             $model->venue_id = (int) $data['venue_id'];
             $model->category_id = (int) $data['category_id'];
-            $model->capacity = isset($data['capacity']) && $data['capacity'] !== ''
-                ? (int) $data['capacity']
-                : null;
+            $model->capacity = $newCapacity;
             $model->cover_path = $newCoverPath;
             $model->payment_note = isset($data['payment_note']) && trim((string) $data['payment_note']) !== ''
                 ? trim((string) $data['payment_note'])
@@ -112,6 +119,12 @@ class EventService
                 $model->manager_id = $manager->id;
                 $model->status = $submitImmediately ? 'pending' : 'draft';
                 $model->submitted_at = $submitImmediately ? now() : null;
+            } elseif ($model->status === 'approved') {
+                // Jakákoli úprava schválené události pořadatelem ji vrací ke schválení moderátorem
+                $model->status = 'pending';
+                $model->submitted_at = now();
+                $model->reviewed_by = null;
+                $model->reviewed_at = null;
             } elseif ($model->status === 'rejected') {
                 $model->status = $submitImmediately ? 'pending' : 'draft';
                 $model->submitted_at = $submitImmediately ? now() : null;
@@ -170,9 +183,50 @@ class EventService
     /**
      * @param array<int, array{id?: int|null, name: string, price: string|int|float, capacity?: int|null}> $tickets
      */
+    private function validateCapacities(?Event $event, ?int $eventCapacity, array $tickets): void
+    {
+        if ($event !== null && $eventCapacity !== null) {
+            $activeRegistrations = Registration::query()
+                ->where('event_id', $event->id)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->count();
+
+            if ($eventCapacity < $activeRegistrations) {
+                throw new DomainException("Kapacitu události nelze snížit na {$eventCapacity}, protože je již registrováno {$activeRegistrations} účastníků.");
+            }
+        }
+
+        foreach ($tickets as $ticketData) {
+            $ticketCap = isset($ticketData['capacity']) && $ticketData['capacity'] !== ''
+                ? (int) $ticketData['capacity']
+                : null;
+            $ticketName = trim((string) ($ticketData['name'] ?? 'Vstupenka'));
+
+            if ($ticketCap !== null && $eventCapacity !== null && $ticketCap > $eventCapacity) {
+                throw new DomainException("Kapacita vstupného „{$ticketName}“ ({$ticketCap}) nemůže převyšovat celkovou kapacitu události ({$eventCapacity}).");
+            }
+
+            $ticketId = isset($ticketData['id']) && $ticketData['id'] !== '' ? (int) $ticketData['id'] : null;
+            if ($event !== null && $ticketId !== null && $ticketCap !== null) {
+                $ticketRegistrations = Registration::query()
+                    ->where('event_id', $event->id)
+                    ->where('ticket_type_id', $ticketId)
+                    ->whereIn('status', ['pending', 'confirmed'])
+                    ->count();
+
+                if ($ticketCap < $ticketRegistrations) {
+                    throw new DomainException("Kapacitu vstupného „{$ticketName}“ nelze snížit na {$ticketCap}, protože jej má již {$ticketRegistrations} registrovaných účastníků.");
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array<int, array{id?: int|null, name: string, price: string|int|float, capacity?: int|null}> $tickets
+     */
     private function syncTicketTypes(Event $event, array $tickets): void
     {
-        $existing = $event->ticketTypes()->withCount('registrations')->get()->keyBy('id');
+        $existing = $event->ticketTypes()->get()->keyBy('id');
         $keptIds = [];
 
         foreach ($tickets as $ticketData) {
@@ -201,9 +255,14 @@ class EventService
             }
         }
 
-        // Smažeme jen ty odebrané typy vstupenek, na které ještě nikdo není registrovaný
         foreach ($existing as $ticket) {
-            if (!in_array($ticket->id, $keptIds, true) && $ticket->registrations_count === 0) {
+            if (!in_array($ticket->id, $keptIds, true)) {
+                $hasActiveRegs = Registration::query()
+                    ->where('ticket_type_id', $ticket->id)
+                    ->exists();
+                if ($hasActiveRegs) {
+                    throw new DomainException("Typ vstupného „{$ticket->name}“ nelze odebrat, protože jsou na něj již navázané registrace.");
+                }
                 $ticket->delete();
             }
         }

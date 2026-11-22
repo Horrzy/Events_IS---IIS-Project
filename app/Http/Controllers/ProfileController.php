@@ -61,11 +61,13 @@ class ProfileController extends Controller
             'password.confirmed' => 'Potvrzení nového hesla se neshoduje.',
         ]);
 
-        $request->user()->update([
-            'password' => $validated['password'],
-        ]);
+        $user = $request->user();
+        $user->password = $validated['password'];
+        $user->auth_version = ((int) $user->auth_version) + 1;
+        $user->save();
 
         $request->session()->regenerate();
+        $request->session()->put('auth_version', (int) $user->auth_version);
 
         return redirect()
             ->route('profile.edit')
