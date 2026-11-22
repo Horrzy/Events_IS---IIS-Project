@@ -81,7 +81,7 @@
                     $startPrague = $event->starts_at->copy()->setTimezone('Europe/Prague');
                 @endphp
                 <div class="col-md-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
+                    <div class="card card-hover shadow-sm h-100">
                         @if ($event->cover_path)
                             <img
                                 src="{{ asset($event->cover_path) }}"
@@ -89,19 +89,33 @@
                                 alt="{{ $event->title }}"
                                 style="height: 180px;"
                             >
+                        @else
+                            <div class="card-cover-placeholder">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-white text-primary border">{{ $event->category?->name }}</span>
+                                    <span class="small text-secondary fw-semibold">{{ $event->code() }}</span>
+                                </div>
+                                <div class="small fw-semibold text-primary">
+                                    {{ $startPrague->format('d. m. Y · H:i') }}
+                                </div>
+                            </div>
                         @endif
                         <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge text-bg-light border text-dark">{{ $event->category?->name }}</span>
-                                <span class="small text-muted">{{ $event->code() }}</span>
-                            </div>
+                            @if ($event->cover_path)
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge text-bg-light border text-dark">{{ $event->category?->name }}</span>
+                                    <span class="small text-muted">{{ $event->code() }}</span>
+                                </div>
+                            @endif
                             <h2 class="h5 card-title">
                                 <a href="{{ route('events.show', $event->slug) }}" class="text-decoration-none text-dark">
                                     {{ $event->title }}
                                 </a>
                             </h2>
                             <div class="small text-muted mb-2">
-                                <div>{{ $startPrague->format('d. m. Y H:i') }}</div>
+                                @if ($event->cover_path)
+                                    <div>{{ $startPrague->format('d. m. Y H:i') }}</div>
+                                @endif
                                 <div>{{ $event->venue?->name }} ({{ $event->venue?->city }})</div>
                             </div>
                             <p class="card-text small text-secondary mb-3">

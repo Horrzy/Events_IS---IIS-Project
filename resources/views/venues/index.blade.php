@@ -49,7 +49,7 @@
         <div class="row g-4">
             @foreach ($venues as $venue)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card shadow-sm h-100">
+                    <div class="card card-hover shadow-sm h-100">
                         @if ($venue->photo_path)
                             <img
                                 src="{{ asset($venue->photo_path) }}"
