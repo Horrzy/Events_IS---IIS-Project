@@ -6,8 +6,8 @@ Webový informační systém pro správu událostí a akcí vytvořený jako pro
 | --- | --- |
 | Předmět | Informační systémy (IIS), FIT VUT v Brně |
 | Varianta zadání | Systém pro správu událostí |
-| Autoři | *(doplnit jména a loginy členů týmu)* |
-| Veřejná URL aplikace | *(doplnit URL po nasazení na server Eva / hosting)* |
+| Autoři | Lukáš Dudek (`xdudekl00`) *(případně doplnit další členy týmu)* |
+| Veřejná URL aplikace | http://www.stud.fit.vutbr.cz/~xdudekl00/IIS |
 | Komentované video (~5 min) | *(doplnit odkaz na video)* |
 
 ---

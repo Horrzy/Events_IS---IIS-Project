@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 1020" width="1060" height="1020" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .tbl-box { fill: #ffffff; stroke: #2c3e50; stroke-width: 1.5; rx: 6; ry: 6; }
+      .tbl-hdr { fill: #1a3768; }
+      .tbl-title { fill: #ffffff; font-size: 13px; font-weight: 700; }
+      .col-name { fill: #1a202c; font-size: 11.5px; }
+      .col-type { fill: #64748b; font-size: 10.5px; text-anchor: end; }
+      .badge-pk { fill: #b45309; font-size: 9.5px; font-weight: 700; }
+      .badge-fk { fill: #1d4ed8; font-size: 9.5px; font-weight: 700; }
+      .badge-uq { fill: #047857; font-size: 9.5px; font-weight: 700; }
+      .rel { fill: none; stroke: #475569; stroke-width: 1.5; }
+      .rel-user { fill: none; stroke: #94a3b8; stroke-width: 1.3; stroke-dasharray: 5 3; }
+      .rel-lbl { fill: #334155; font-size: 10px; font-weight: 600; }
+      .card-lbl { fill: #0f172a; font-size: 10px; font-weight: 700; }
+      .legend-txt { fill: #475569; font-size: 11px; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1060" height="1020"/>
+
+  <!-- Relationships (drawn behind tables) -->
+  <!-- users 1 -> N venues (proposed_by, reviewed_by) -->
+  <path class="rel" d="M 390 100 L 280 100"/>
+  <text class="card-lbl" x="374" y="94">1</text>
+  <text class="card-lbl" x="286" y="94">N</text>
+  <text class="rel-lbl" x="335" y="114" text-anchor="middle">proposed_by</text>
+  <text class="rel-lbl" x="335" y="126" text-anchor="middle">reviewed_by</text>
+
+  <!-- users 1 -> N categories (proposed_by, reviewed_by) -->
+  <path class="rel" d="M 640 100 L 740 100"/>
+  <text class="card-lbl" x="646" y="94">1</text>
+  <text class="card-lbl" x="724" y="94">N</text>
+  <text class="rel-lbl" x="690" y="114" text-anchor="middle">proposed_by</text>
+  <text class="rel-lbl" x="690" y="126" text-anchor="middle">reviewed_by</text>
+
+  <!-- categories 1 -> N categories (parent_id self-reference) -->
+  <path class="rel" d="M 990 100 L 1038 100 L 1038 158 L 990 158"/>
+  <text class="card-lbl" x="996" y="94">0..1</text>
+  <text class="card-lbl" x="996" y="172">N</text>
+  <text class="rel-lbl" x="1032" y="133" text-anchor="end">parent_id</text>
+
+  <!-- users 1 -> N events (manager_id, reviewed_by) -->
+  <path class="rel" d="M 495 272 L 495 330"/>
+  <text class="card-lbl" x="501" y="286">1</text>
+  <text class="card-lbl" x="501" y="324">N</text>
+  <text class="rel-lbl" x="502" y="305">manager_id, reviewed_by</text>
+
+  <!-- venues 1 -> N events (venue_id) -->
+  <path class="rel" d="M 190 292 L 190 420 L 310 420"/>
+  <text class="card-lbl" x="196" y="306">1</text>
+  <text class="card-lbl" x="296" y="414">N</text>
+  <text class="rel-lbl" x="250" y="414" text-anchor="middle">venue_id</text>
+
+  <!-- categories 1 -> N events (category_id) -->
+  <path class="rel" d="M 780 272 L 780 356 L 580 356"/>
+  <text class="card-lbl" x="786" y="286">1</text>
+  <text class="card-lbl" x="586" y="350">N</text>
+  <text class="rel-lbl" x="680" y="350" text-anchor="middle">category_id</text>
+
+  <!-- events 1 -> N ticket_types (event_id) -->
+  <path class="rel" d="M 580 460 L 740 460"/>
+  <text class="card-lbl" x="586" y="454">1</text>
+  <text class="card-lbl" x="724" y="454">N</text>
+  <text class="rel-lbl" x="660" y="454" text-anchor="middle">event_id</text>
+
+  <!-- events 1 -> N ratings (event_id) -->
+  <path class="rel" d="M 310 620 L 210 620 L 210 740"/>
+  <text class="card-lbl" x="296" y="614">1</text>
+  <text class="card-lbl" x="216" y="734">N</text>
+  <text class="rel-lbl" x="260" y="614" text-anchor="middle">event_id</text>
+
+  <!-- events 1 -> N comments (event_id) -->
+  <path class="rel" d="M 445 692 L 445 740"/>
+  <text class="card-lbl" x="451" y="706">1</text>
+  <text class="card-lbl" x="451" y="734">N</text>
+  <text class="rel-lbl" x="451" y="721">event_id</text>
+
+  <!-- events 1 -> N registrations (event_id) -->
+  <path class="rel" d="M 580 620 L 710 620 L 710 740"/>
+  <text class="card-lbl" x="586" y="614">1</text>
+  <text class="card-lbl" x="716" y="734">N</text>
+  <text class="rel-lbl" x="650" y="614" text-anchor="middle">event_id</text>
+
+  <!-- ticket_types 1 -> N registrations (ticket_type_id) -->
+  <path class="rel" d="M 865 552 L 865 740"/>
+  <text class="card-lbl" x="871" y="566">1</text>
+  <text class="card-lbl" x="871" y="734">N</text>
+  <text class="rel-lbl" x="872" y="650">ticket_type_id</text>
+
+  <!-- users 1 -> N ratings (user_id, dashed for clarity) -->
+  <path class="rel-user" d="M 415 272 L 415 308 L 95 308 L 95 740"/>
+  <text class="card-lbl" x="403" y="286">1</text>
+  <text class="card-lbl" x="101" y="734">N</text>
+  <text class="rel-lbl" x="101" y="560">user_id</text>
+
+  <!-- users 1 -> N comments & registrations (user_id / hidden_by / confirmed_by, dashed) -->
+  <path class="rel-user" d="M 615 272 L 615 716 L 555 716 L 555 740"/>
+  <path class="rel-user" d="M 615 716 L 670 716 L 670 740"/>
+  <text class="card-lbl" x="621" y="286">1</text>
+  <text class="card-lbl" x="542" y="734">N</text>
+  <text class="card-lbl" x="676" y="734">N</text>
+  <text class="rel-lbl" x="621" y="535">user_id</text>
+  <text class="rel-lbl" x="621" y="547">hidden_by</text>
+  <text class="rel-lbl" x="621" y="559">confirmed_by</text>
+
+  <!-- TABLE: venues -->
+  <g transform="translate(30, 30)">
+    <rect class="tbl-box" x="0" y="0" width="250" height="262"/>
+    <path class="tbl-hdr" d="M 6 0 L 244 0 Q 250 0 250 6 L 250 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">venues</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="240" y="48">bigint</text>
+    <text class="col-name" x="34" y="68">name</text><text class="col-type" x="240" y="68">varchar(150)</text>
+    <text class="col-name" x="34" y="88">street</text><text class="col-type" x="240" y="88">varchar(150)</text>
+    <text class="col-name" x="34" y="108">city</text><text class="col-type" x="240" y="108">varchar(100)</text>
+    <text class="col-name" x="34" y="128">postal_code</text><text class="col-type" x="240" y="128">varchar(20)?</text>
+    <text class="col-name" x="34" y="148">description</text><text class="col-type" x="240" y="148">text?</text>
+    <text class="col-name" x="34" y="168">photo_path</text><text class="col-type" x="240" y="168">varchar(255)?</text>
+    <text class="col-name" x="34" y="188">status</text><text class="col-type" x="240" y="188">enum</text>
+    <text class="badge-fk" x="10" y="208">FK</text><text class="col-name" x="34" y="208">proposed_by</text><text class="col-type" x="240" y="208">bigint</text>
+    <text class="badge-fk" x="10" y="228">FK</text><text class="col-name" x="34" y="228">reviewed_by</text><text class="col-type" x="240" y="228">bigint?</text>
+    <text class="col-name" x="34" y="248">reviewed_at, rejection_reason</text><text class="col-type" x="240" y="248">ts / text?</text>
+  </g>
+
+  <!-- TABLE: users -->
+  <g transform="translate(390, 30)">
+    <rect class="tbl-box" x="0" y="0" width="250" height="242"/>
+    <path class="tbl-hdr" d="M 6 0 L 244 0 Q 250 0 250 6 L 250 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">users</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="240" y="48">bigint</text>
+    <text class="badge-uq" x="10" y="68">UQ</text><text class="col-name" x="34" y="68">username</text><text class="col-type" x="240" y="68">varchar(50)</text>
+    <text class="badge-uq" x="10" y="88">UQ</text><text class="col-name" x="34" y="88">email</text><text class="col-type" x="240" y="88">varchar(255)</text>
+    <text class="col-name" x="34" y="108">password</text><text class="col-type" x="240" y="108">varchar(255)</text>
+    <text class="col-name" x="34" y="128">name</text><text class="col-type" x="240" y="128">varchar(120)</text>
+    <text class="col-name" x="34" y="148">role</text><text class="col-type" x="240" y="148">enum(user|mod|adm)</text>
+    <text class="col-name" x="34" y="168">is_active</text><text class="col-type" x="240" y="168">boolean</text>
+    <text class="col-name" x="34" y="188">auth_version</text><text class="col-type" x="240" y="188">int unsigned</text>
+    <text class="col-name" x="34" y="208">last_login_at</text><text class="col-type" x="240" y="208">timestamp?</text>
+    <text class="col-name" x="34" y="228">created_at, updated_at</text><text class="col-type" x="240" y="228">timestamps</text>
+  </g>
+
+  <!-- TABLE: categories -->
+  <g transform="translate(740, 30)">
+    <rect class="tbl-box" x="0" y="0" width="250" height="242"/>
+    <path class="tbl-hdr" d="M 6 0 L 244 0 Q 250 0 250 6 L 250 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">categories</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="240" y="48">bigint</text>
+    <text class="col-name" x="34" y="68">name</text><text class="col-type" x="240" y="68">varchar(100)</text>
+    <text class="badge-uq" x="10" y="88">UQ</text><text class="col-name" x="34" y="88">slug</text><text class="col-type" x="240" y="88">varchar(120)</text>
+    <text class="badge-fk" x="10" y="108">FK</text><text class="col-name" x="34" y="108">parent_id</text><text class="col-type" x="240" y="108">bigint?</text>
+    <text class="col-name" x="34" y="128">description</text><text class="col-type" x="240" y="128">text?</text>
+    <text class="col-name" x="34" y="148">status</text><text class="col-type" x="240" y="148">enum</text>
+    <text class="badge-fk" x="10" y="168">FK</text><text class="col-name" x="34" y="168">proposed_by</text><text class="col-type" x="240" y="168">bigint</text>
+    <text class="badge-fk" x="10" y="188">FK</text><text class="col-name" x="34" y="188">reviewed_by</text><text class="col-type" x="240" y="188">bigint?</text>
+    <text class="col-name" x="34" y="208">reviewed_at, rejection_reason</text><text class="col-type" x="240" y="208">ts / text?</text>
+    <text class="col-name" x="34" y="228">created_at, updated_at</text><text class="col-type" x="240" y="228">timestamps</text>
+  </g>
+
+  <!-- TABLE: events -->
+  <g transform="translate(310, 330)">
+    <rect class="tbl-box" x="0" y="0" width="270" height="362"/>
+    <path class="tbl-hdr" d="M 6 0 L 264 0 Q 270 0 270 6 L 270 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">events</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="260" y="48">bigint</text>
+    <text class="badge-uq" x="10" y="68">UQ</text><text class="col-name" x="34" y="68">slug</text><text class="col-type" x="260" y="68">varchar(160)</text>
+    <text class="col-name" x="34" y="88">title</text><text class="col-type" x="260" y="88">varchar(160)</text>
+    <text class="col-name" x="34" y="108">description</text><text class="col-type" x="260" y="108">text</text>
+    <text class="col-name" x="34" y="128">starts_at</text><text class="col-type" x="260" y="128">datetime (UTC)</text>
+    <text class="col-name" x="34" y="148">ends_at</text><text class="col-type" x="260" y="148">datetime (UTC)</text>
+    <text class="badge-fk" x="10" y="168">FK</text><text class="col-name" x="34" y="168">venue_id</text><text class="col-type" x="260" y="168">bigint</text>
+    <text class="badge-fk" x="10" y="188">FK</text><text class="col-name" x="34" y="188">category_id</text><text class="col-type" x="260" y="188">bigint</text>
+    <text class="col-name" x="34" y="208">capacity</text><text class="col-type" x="260" y="208">int unsigned?</text>
+    <text class="col-name" x="34" y="228">cover_path</text><text class="col-type" x="260" y="228">varchar(255)?</text>
+    <text class="col-name" x="34" y="248">payment_note</text><text class="col-type" x="260" y="248">text?</text>
+    <text class="col-name" x="34" y="268">status</text><text class="col-type" x="260" y="268">enum (5 stavů)</text>
+    <text class="badge-fk" x="10" y="288">FK</text><text class="col-name" x="34" y="288">manager_id</text><text class="col-type" x="260" y="288">bigint</text>
+    <text class="badge-fk" x="10" y="308">FK</text><text class="col-name" x="34" y="308">reviewed_by</text><text class="col-type" x="260" y="308">bigint?</text>
+    <text class="col-name" x="34" y="328">submitted_at, reviewed_at</text><text class="col-type" x="260" y="328">timestamps?</text>
+    <text class="col-name" x="34" y="348">rejection_reason, cancelled_reason</text><text class="col-type" x="260" y="348">text?</text>
+  </g>
+
+  <!-- TABLE: ticket_types -->
+  <g transform="translate(740, 390)">
+    <rect class="tbl-box" x="0" y="0" width="250" height="162"/>
+    <path class="tbl-hdr" d="M 6 0 L 244 0 Q 250 0 250 6 L 250 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">ticket_types</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="240" y="48">bigint</text>
+    <text class="badge-fk" x="10" y="68">FK</text><text class="col-name" x="34" y="68">event_id</text><text class="col-type" x="240" y="68">bigint (CASCADE)</text>
+    <text class="col-name" x="34" y="88">name</text><text class="col-type" x="240" y="88">varchar(100)</text>
+    <text class="col-name" x="34" y="108">price</text><text class="col-type" x="240" y="108">decimal(10,2)</text>
+    <text class="col-name" x="34" y="128">capacity</text><text class="col-type" x="240" y="128">int unsigned?</text>
+    <text class="col-name" x="34" y="148">created_at, updated_at</text><text class="col-type" x="240" y="148">timestamps</text>
+  </g>
+
+  <!-- TABLE: ratings -->
+  <g transform="translate(30, 740)">
+    <rect class="tbl-box" x="0" y="0" width="250" height="142"/>
+    <path class="tbl-hdr" d="M 6 0 L 244 0 Q 250 0 250 6 L 250 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">ratings</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="240" y="48">bigint</text>
+    <text class="badge-fk" x="10" y="68">FK</text><text class="col-name" x="34" y="68">event_id (UQ)</text><text class="col-type" x="240" y="68">bigint (CASCADE)</text>
+    <text class="badge-fk" x="10" y="88">FK</text><text class="col-name" x="34" y="88">user_id (UQ)</text><text class="col-type" x="240" y="88">bigint</text>
+    <text class="col-name" x="34" y="108">stars</text><text class="col-type" x="240" y="108">tinyint (1–5)</text>
+    <text class="col-name" x="34" y="128">created_at, updated_at</text><text class="col-type" x="240" y="128">timestamps</text>
+  </g>
+
+  <!-- TABLE: comments -->
+  <g transform="translate(330, 740)">
+    <rect class="tbl-box" x="0" y="0" width="260" height="202"/>
+    <path class="tbl-hdr" d="M 6 0 L 254 0 Q 260 0 260 6 L 260 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">comments</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="250" y="48">bigint</text>
+    <text class="badge-fk" x="10" y="68">FK</text><text class="col-name" x="34" y="68">event_id</text><text class="col-type" x="250" y="68">bigint (CASCADE)</text>
+    <text class="badge-fk" x="10" y="88">FK</text><text class="col-name" x="34" y="88">user_id</text><text class="col-type" x="250" y="88">bigint</text>
+    <text class="col-name" x="34" y="108">body</text><text class="col-type" x="250" y="108">text</text>
+    <text class="col-name" x="34" y="128">is_hidden</text><text class="col-type" x="250" y="128">boolean</text>
+    <text class="badge-fk" x="10" y="148">FK</text><text class="col-name" x="34" y="148">hidden_by</text><text class="col-type" x="250" y="148">bigint?</text>
+    <text class="col-name" x="34" y="168">hidden_at</text><text class="col-type" x="250" y="168">timestamp?</text>
+    <text class="col-name" x="34" y="188">created_at, updated_at</text><text class="col-type" x="250" y="188">timestamps</text>
+  </g>
+
+  <!-- TABLE: registrations -->
+  <g transform="translate(650, 740)">
+    <rect class="tbl-box" x="0" y="0" width="340" height="242"/>
+    <path class="tbl-hdr" d="M 6 0 L 334 0 Q 340 0 340 6 L 340 30 L 0 30 L 0 6 Q 0 0 6 0 Z"/>
+    <text class="tbl-title" x="12" y="20">registrations</text>
+    <text class="badge-pk" x="10" y="48">PK</text><text class="col-name" x="34" y="48">id</text><text class="col-type" x="330" y="48">bigint</text>
+    <text class="badge-fk" x="10" y="68">FK</text><text class="col-name" x="34" y="68">event_id</text><text class="col-type" x="330" y="68">bigint</text>
+    <text class="badge-fk" x="10" y="88">FK</text><text class="col-name" x="34" y="88">user_id</text><text class="col-type" x="330" y="88">bigint</text>
+    <text class="badge-fk" x="10" y="108">FK</text><text class="col-name" x="34" y="108">ticket_type_id</text><text class="col-type" x="330" y="108">bigint</text>
+    <text class="col-name" x="34" y="128">unit_price</text><text class="col-type" x="330" y="128">decimal(10,2)</text>
+    <text class="col-name" x="34" y="148">status</text><text class="col-type" x="330" y="148">enum(pending|confirmed|cancelled)</text>
+    <text class="col-name" x="34" y="168">payment_claimed_at</text><text class="col-type" x="330" y="168">timestamp?</text>
+    <text class="badge-fk" x="10" y="188">FK</text><text class="col-name" x="34" y="188">confirmed_by</text><text class="col-type" x="330" y="188">bigint?</text>
+    <text class="col-name" x="34" y="208">confirmed_at, cancelled_at</text><text class="col-type" x="330" y="208">timestamps?</text>
+    <text class="col-name" x="34" y="228">created_at, updated_at</text><text class="col-type" x="330" y="228">timestamps</text>
+  </g>
+
+  <!-- Legend -->
+  <text class="legend-txt" x="30" y="1002">Legenda: PK = primární klíč, FK = cizí klíč, UQ = unikátní omezení, ? = nullable sloupec, čárkovaná čára = vazba na users.</text>
+</svg>

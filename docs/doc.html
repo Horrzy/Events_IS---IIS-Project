@@ -1,168 +1,337 @@
-<!DOCTYPE html>
-<html lang="cs">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+
 <head>
-    <meta charset="utf-8">
-    <title>Dokumentace projektu IIS – Systém pro správu událostí</title>
-    <style>
-        body { font-family: system-ui, -apple-system, sans-serif; max-width: 980px; margin: 2rem auto; padding: 0 1.25rem; line-height: 1.6; color: #222; }
-        h1, h2, h3 { color: #111; }
-        table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.95rem; }
-        th, td { border: 1px solid #d0d7de; padding: 0.5rem 0.75rem; text-align: left; vertical-align: top; }
-        th { background: #f6f8fa; }
-        code { background: #f3f4f6; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
-        pre { background: #f6f8fa; padding: 0.85rem 1rem; border-radius: 6px; overflow-x: auto; }
-        .note { background: #fff8c5; border-left: 4px solid #d4a72c; padding: 0.75rem 1rem; margin: 1rem 0; }
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Projekt IIS – Systém pro správu událostí</title>
+    <style type="text/css">
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1020px;
+            margin: 1.5em auto;
+            padding: 0 1em;
+            line-height: 1.5;
+            color: #111;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 0.8em 0 1.2em;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #333;
+            padding: 0.35em 0.55em;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f3f4f6;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-top: 0.6em;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            padding: 0.1em 0.3em;
+            font-size: 0.92em;
+        }
+
+        pre {
+            background-color: #f6f8fa;
+            border: 1px solid #d0d7de;
+            padding: 0.8em 1em;
+            overflow-x: auto;
+        }
+
+        .schema-img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            margin: 0.5em 0;
+        }
     </style>
 </head>
+
 <body>
 
-<h1>Informační systém pro správu událostí (IIS)</h1>
+    <h1>Systém pro správu událostí</h1>
 
-<table>
-    <tr><th>Položka</th><th>Hodnota</th></tr>
-    <tr><td>Předmět</td><td>Informační systémy (IIS), FIT VUT v Brně</td></tr>
-    <tr><td>Varianta zadání</td><td>Systém pro správu událostí</td></tr>
-    <tr><td>Autoři</td><td><em>(doplnit jména a loginy týmu před odevzdáním)</em></td></tr>
-    <tr><td>Veřejná URL (Eva)</td><td><em>(doplnit po nasazení na server Eva)</em></td></tr>
-    <tr><td>Komentované video (~5 min)</td><td><em>(doplnit odkaz na video před odevzdáním)</em></td></tr>
-</table>
+    <dl>
+        <dt>Autoři</dt>
+        <dd>Lukáš Dudek
+            <a href="mailto:xdudekl00@stud.fit.vutbr.cz">xdudekl00@stud.fit.vutbr.cz</a> –
+            návrh databáze, backend (události, registrace, moderace), nasazení na server Eva
+        </dd>
+        <dd>Jan Raška
+            <a href="mailto:xraskaj00@stud.fit.vutbr.cz">xraskaj00@stud.fit.vutbr.cz</a> –
+            frontend (Blade šablony, CSS), správa uživatelů, kalendář a testování
+        </dd>
+        <dt>URL aplikace</dt>
+        <dd><a href="http://www.stud.fit.vutbr.cz/~xdudekl00/IIS">http://www.stud.fit.vutbr.cz/~xdudekl00/IIS</a></dd>
+    </dl>
 
-<h2>1. Použité technologie a verze knihoven</h2>
-<ul>
-    <li><strong>Backend:</strong> PHP 8.1, Laravel Framework <code>10.50.4</code> (Eloquent ORM, migrace, Blade šablony)</li>
-    <li><strong>Databáze:</strong> MariaDB <code>10.11</code> / MySQL (InnoDB, <code>utf8mb4_czech_ci</code>)</li>
-    <li><strong>Frontend:</strong> HTML5, CSS, Bootstrap <code>5.3.3</code> (uložen lokálně v <code>public/assets/vendor/</code>), čistý JavaScript</li>
-    <li><strong>Testování (pouze lokálně):</strong> PHPUnit <code>10.5</code></li>
-</ul>
+    <h2>Uživatelé systému pro testování</h2>
+    <p>V systému jsou přes <code>DatabaseSeeder</code> připraveny účty pro <strong>všechny role uživatelů</strong>
+        (přihlásit se lze uživatelským jménem i e-mailem):</p>
+    <table>
+        <tr>
+            <th>Login</th>
+            <th>E-mail</th>
+            <th>Heslo</th>
+            <th>Role</th>
+        </tr>
+        <tr>
+            <td><code>admin</code></td>
+            <td><code>admin@iis.local</code></td>
+            <td><code>Admin1234!</code></td>
+            <td>Administrátor</td>
+        </tr>
+        <tr>
+            <td><code>moderator</code></td>
+            <td><code>moderator@iis.local</code></td>
+            <td><code>Mod1234!</code></td>
+            <td>Moderátor</td>
+        </tr>
+        <tr>
+            <td><code>petr</code></td>
+            <td><code>petr@iis.local</code></td>
+            <td><code>User1234!</code></td>
+            <td>Registrovaný uživatel (správce událostí i účastník)</td>
+        </tr>
+        <tr>
+            <td><code>jana</code></td>
+            <td><code>jana@iis.local</code></td>
+            <td><code>User1234!</code></td>
+            <td>Registrovaný uživatel (účastník i správce událostí)</td>
+        </tr>
+    </table>
 
-<h2>2. Architektura a mapování případů užití</h2>
-<p>Aplikace využívá serverovou MVC architekturu Laravelu rozšířenou o vrstvu <code>app/Services/</code> pro transakční a stromovou logiku.</p>
+    <p>(Diagram případů užití není přiložen, protože systém implementuje role a případy užití definované zadáním.)</p>
 
-<table>
-    <thead>
+    <h3>Video</h3>
+    <p>
+        <!-- TODO: Doplnit skutečný odkaz na komentované video (~5 min) např. na VUT Google Drive -->
+        Odkaz na komentované video demonstrující použití aplikace:
+        <a href="https://drive.google.com/"><em>(doplnit odkaz na video před odevzdáním)</em></a>
+    </p>
+
+    <h2>Implementace</h2>
+    <p>
+        Aplikace je postavena na serverové MVC architektuře frameworku <strong>Laravel 10</strong> (PHP 8.1+) s
+        renderováním pohledů v šablonách Blade a přístupem k databázi přes Eloquent ORM.
+        Složitější doménová a transakční logika je oddělena do servisní vrstvy <code>app/Services/</code> a oprávnění
+        hlídají vlastní middleware v <code>app/Http/Middleware/</code>.
+    </p>
+
+    <table>
         <tr>
             <th>Případ užití</th>
             <th>Routy (<code>routes/web.php</code>)</th>
-            <th>Controller / Service</th>
+            <th>Controller / Service / Middleware</th>
             <th>Šablony (<code>resources/views/</code>)</th>
         </tr>
-    </thead>
-    <tbody>
         <tr>
-            <td>Registrace, přihlášení, odhlášení, timeout relace (30 min)</td>
+            <td>Úvodní stránka a rychlé vyhledávání</td>
+            <td><code>GET /</code></td>
+            <td><code>HomeController</code></td>
+            <td><code>home.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Registrace, přihlášení, odhlášení, timeout relace (30 min) a <code>auth_version</code></td>
             <td><code>GET/POST /registrace</code>, <code>GET/POST /prihlaseni</code>, <code>POST /odhlaseni</code></td>
             <td><code>AuthController</code>, <code>EnsureSessionIsValid</code></td>
             <td><code>auth/register.blade.php</code>, <code>auth/login.blade.php</code></td>
         </tr>
         <tr>
-            <td>Úprava profilu a změna hesla</td>
+            <td>Úprava vlastního profilu a změna hesla</td>
             <td><code>GET/POST /profil</code>, <code>POST /profil/heslo</code></td>
             <td><code>ProfileController</code></td>
             <td><code>profile/edit.blade.php</code></td>
         </tr>
         <tr>
-            <td>Administrace uživatelů a rolí</td>
+            <td>Administrace uživatelů a rolí (přidání, úprava, reset hesla, aktivace/deaktivace, mazání)</td>
             <td><code>/admin/uzivatele/*</code></td>
             <td><code>AdminUserController</code>, <code>RequireRole</code></td>
-            <td><code>admin/users/index.blade.php</code>, <code>form.blade.php</code></td>
+            <td><code>admin/users/index.blade.php</code>, <code>admin/users/form.blade.php</code></td>
         </tr>
         <tr>
-            <td>Katalog míst, návrh místa s fotkou, moje návrhy</td>
-            <td><code>GET /mista</code>, <code>GET/POST /mista/navrhnout</code>, <code>GET /mista/{venue}</code>, <code>GET /moje-navrhy</code></td>
+            <td>Veřejný katalog událostí, filtrování (včetně podkategorií) a detail události</td>
+            <td><code>GET /udalosti</code>, <code>GET /udalosti/{slug}</code></td>
+            <td><code>EventController</code>, <code>CategoryService</code></td>
+            <td><code>events/index.blade.php</code>, <code>events/show.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Zakládání, úpravy, odeslání ke schválení a zrušení události + správa typů vstupného</td>
+            <td><code>GET /moje-udalosti</code>, <code>GET/POST /udalosti/nova</code>,
+                <code>/udalosti/{event}/upravit|odeslat|zrusit</code></td>
+            <td><code>EventController</code>, <code>EventService</code>, <code>ImageUploadService</code></td>
+            <td><code>events/mine.blade.php</code>, <code>events/form.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Registrace na událost (transakční kontrola kapacity), zrušení, hlášení a potvrzení úhrady</td>
+            <td><code>POST /udalosti/{slug}/registrace</code>, <code>GET /moje-registrace</code>,
+                <code>GET /udalosti/{event}/ucastnici</code>,
+                <code>POST /registrace/{registration}/zrusit|uhrazeno|potvrdit|odmitnout</code></td>
+            <td><code>RegistrationController</code>, <code>RegistrationService</code></td>
+            <td><code>registrations/index.blade.php</code>, <code>registrations/participants.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Osobní kalendář, export do <code>.ics</code> (RFC 5545) a odkaz do Google kalendáře</td>
+            <td><code>GET /muj-kalendar</code>, <code>GET /muj-kalendar.ics</code></td>
+            <td><code>CalendarController</code>, <code>IcsService</code>, <code>EventController</code></td>
+            <td><code>calendar/index.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Hodnocení (1–5 hvězdiček) a komentáře po skončení události</td>
+            <td><code>POST /udalosti/{slug}/hodnoceni</code>, <code>POST /udalosti/{slug}/komentar</code>,
+                <code>POST /komentare/{comment}/smazat</code></td>
+            <td><code>FeedbackController</code></td>
+            <td><code>events/show.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Katalog míst konání, návrh nového místa s fotkou a přehled mých návrhů</td>
+            <td><code>GET /mista</code>, <code>GET /mista/{venue}</code>, <code>GET/POST /mista/navrhnout</code>,
+                <code>GET /moje-navrhy</code></td>
             <td><code>VenueController</code>, <code>ImageUploadService</code></td>
             <td><code>venues/*.blade.php</code>, <code>proposals/index.blade.php</code></td>
         </tr>
         <tr>
-            <td>Moderace a správa míst</td>
-            <td><code>/moderace/mista/*</code></td>
-            <td><code>ModerationVenueController</code></td>
-            <td><code>moderation/venues/*.blade.php</code></td>
-        </tr>
-        <tr>
-            <td>Hierarchické kategorie (strom až 4 úrovně) a návrhy</td>
+            <td>Hierarchické kategorie (strom až 4 úrovně) a návrh nové kategorie</td>
             <td><code>GET /kategorie</code>, <code>GET/POST /kategorie/navrhnout</code></td>
             <td><code>CategoryController</code>, <code>CategoryService</code></td>
             <td><code>categories/*.blade.php</code></td>
         </tr>
         <tr>
+            <td>Moderace událostí a upozornění na kolizi místa a času</td>
+            <td><code>/moderace/udalosti/*</code></td>
+            <td><code>ModerationEventController</code>, <code>EventService</code>, <code>RequireRole</code></td>
+            <td><code>moderation/events/index.blade.php</code>, <code>moderation/events/show.blade.php</code></td>
+        </tr>
+        <tr>
+            <td>Moderace a správa míst konání</td>
+            <td><code>/moderace/mista/*</code></td>
+            <td><code>ModerationVenueController</code>, <code>ImageUploadService</code>, <code>RequireRole</code></td>
+            <td><code>moderation/venues/index.blade.php</code>, <code>moderation/venues/form.blade.php</code></td>
+        </tr>
+        <tr>
             <td>Moderace a správa kategorií</td>
             <td><code>/moderace/kategorie/*</code></td>
-            <td><code>ModerationCategoryController</code>, <code>CategoryService</code></td>
-            <td><code>moderation/categories/*.blade.php</code></td>
+            <td><code>ModerationCategoryController</code>, <code>CategoryService</code>, <code>RequireRole</code></td>
+            <td><code>moderation/categories/index.blade.php</code>, <code>moderation/categories/form.blade.php</code>
+            </td>
         </tr>
         <tr>
-            <td>Veřejný katalog událostí, filtrování (včetně podkategorií), detail</td>
-            <td><code>GET /</code>, <code>GET /udalosti</code>, <code>GET /udalosti/{slug}</code></td>
-            <td><code>HomeController</code>, <code>EventController</code>, <code>CategoryService</code></td>
-            <td><code>home.blade.php</code>, <code>events/index.blade.php</code>, <code>show.blade.php</code></td>
+            <td>Moderace komentářů (skrývání / zobrazení)</td>
+            <td><code>/moderace/komentare/*</code></td>
+            <td><code>ModerationCommentController</code>, <code>RequireRole</code></td>
+            <td><code>moderation/comments/index.blade.php</code></td>
         </tr>
-        <tr>
-            <td>Zakládání a správa událostí + více kategorií vstupného</td>
-            <td><code>GET /moje-udalosti</code>, <code>GET/POST /udalosti/nova</code>, <code>/udalosti/{event}/upravit|odeslat|zrusit</code></td>
-            <td><code>EventController</code>, <code>EventService</code></td>
-            <td><code>events/mine.blade.php</code>, <code>events/form.blade.php</code></td>
-        </tr>
-        <tr>
-            <td>Moderace událostí a varování na kolizi místa/času</td>
-            <td><code>/moderace/udalosti/*</code></td>
-            <td><code>ModerationEventController</code>, <code>EventService</code></td>
-            <td><code>moderation/events/*.blade.php</code></td>
-        </tr>
-        <tr>
-            <td>Registrace na událost (transakční kontrola kapacity), zrušení, potvrzení platby správcem</td>
-            <td><code>POST /udalosti/{slug}/registrace</code>, <code>GET /moje-registrace</code>, <code>GET /udalosti/{event}/ucastnici</code>, <code>POST /registrace/{registration}/potvrdit|odmitnout|uhrazeno|zrusit</code></td>
-            <td><code>RegistrationController</code>, <code>RegistrationService</code></td>
-            <td><code>registrations/index.blade.php</code>, <code>participants.blade.php</code></td>
-        </tr>
-        <tr>
-            <td>Osobní kalendář a export do <code>.ics</code> + odkaz do Google kalendáře</td>
-            <td><code>GET /muj-kalendar</code>, <code>GET /muj-kalendar.ics</code></td>
-            <td><code>CalendarController</code>, <code>IcsService</code></td>
-            <td><code>calendar/index.blade.php</code></td>
-        </tr>
-        <tr>
-            <td>Hodnocení (1–5) a komentáře po skončení události + moderace komentářů</td>
-            <td><code>POST /udalosti/{slug}/hodnoceni</code>, <code>POST /udalosti/{slug}/komentar</code>, <code>/moderace/komentare/*</code></td>
-            <td><code>FeedbackController</code>, <code>ModerationCommentController</code></td>
-            <td><code>events/show.blade.php</code>, <code>moderation/comments/index.blade.php</code></td>
-        </tr>
-    </tbody>
-</table>
+    </table>
 
-<h2>3. Databázové schéma</h2>
-<p>Databáze je definována v Laravel migracích v <code>database/migrations/</code> a obsahuje 8 aplikačních tabulek:</p>
-<ul>
-    <li><code>users</code> – uživatelské účty, role (<code>user</code>, <code>moderator</code>, <code>admin</code>) a příznak <code>is_active</code>.</li>
-    <li><code>venues</code> – místa konání, adresa, volitelná fotka a stav schválení.</li>
-    <li><code>categories</code> – stromová hierarchie kategorií přes <code>parent_id</code>.</li>
-    <li><code>events</code> – události (unikátní <code>slug</code>, kód <code>U-RRRR-NNNN</code>, časy v UTC, kapacita, stav, <code>manager_id</code>).</li>
-    <li><code>ticket_types</code> – kategorie vstupného pro událost (cena <code>DECIMAL(10,2)</code>, 0 = zdarma).</li>
-    <li><code>registrations</code> – registrace účastníků se snapshotem ceny <code>unit_price</code> a stavem úhrady.</li>
-    <li><code>ratings</code> – hodnocení 1–5 hvězdiček (unikátní pro pár <code>event_id</code> + <code>user_id</code>).</li>
-    <li><code>comments</code> – komentáře účastníků po skončení akce + příznak skrytí moderátorem <code>is_hidden</code>.</li>
-</ul>
+    <p><strong>Klíčové aplikační a bezpečnostní mechanismy:</strong></p>
+    <ul>
+        <li><strong>Transakční kontrola kapacity:</strong> registrace v <code>RegistrationService::register()</code>
+            probíhá uvnitř databázové transakce se zámkem <code>lockForUpdate()</code> nad událostí i typem vstupného,
+            aby nedošlo k přeplnění při souběžných požadavcích.</li>
+        <li><strong>Strom kategorií:</strong> <code>CategoryService</code> kontroluje schválení rodiče, zabraňuje tvorbě
+            cyklů, vynucuje maximální hloubku 4 úrovně a při filtrování událostí vrací všechny podkategorie zvolené
+            větve.</li>
+        <li><strong>Relace a oprávnění:</strong> <code>EnsureSessionIsValid</code> odhlásí uživatele po 30 minutách
+            nečinnosti a kontroluje sloupec <code>auth_version</code> (změna role, hesla nebo deaktivace účtu okamžitě
+            zneplatní existující relace).</li>
+        <li><strong>Práce se vstupy a médii:</strong> povinná pole jsou označena hvězdičkou, cizí klíče se vybírají ze
+            seznamů, při chybě validace se zachovávají vyplněné hodnoty, úprava schválené události ji vrací k moderaci a
+            složka <code>public/uploads/.htaccess</code> zakazuje spouštění PHP skriptů.</li>
+        <li><strong>Rozšíření nad rámec základu:</strong> propojení s Google kalendářem (přímý odkaz z detailu akce) a
+            export osobního kalendáře do formátu <code>.ics</code>.</li>
+    </ul>
 
-<h2>4. Testovací účty (ukázková data)</h2>
-<div class="note">Poznámka: Tento soubor <code>doc.html</code> s hesly se odevzdává pouze v archivu do IS, nenahrávejte jej do veřejně přístupného adresáře na produkčním serveru.</div>
-<table>
-    <thead>
-        <tr><th>Role</th><th>Uživatelské jméno</th><th>E-mail</th><th>Heslo</th></tr>
-    </thead>
-    <tbody>
-        <tr><td>Administrátor</td><td><code>admin</code></td><td><code>admin@iis.local</code></td><td><code>Admin1234!</code></td></tr>
-        <tr><td>Moderátor</td><td><code>moderator</code></td><td><code>moderator@iis.local</code></td><td><code>Mod1234!</code></td></tr>
-        <tr><td>Registrovaný uživatel (pořadatel / účastník)</td><td><code>petr</code></td><td><code>petr@iis.local</code></td><td><code>User1234!</code></td></tr>
-        <tr><td>Registrovaný uživatel (účastník / pořadatel)</td><td><code>jana</code></td><td><code>jana@iis.local</code></td><td><code>User1234!</code></td></tr>
-    </tbody>
-</table>
+    <h3>Databáze</h3>
+    <p>
+        Relační schéma je definováno migracemi v <code>database/migrations/</code> a tvoří jej 8 aplikačních tabulek
+        (<code>users</code>, <code>venues</code>, <code>categories</code>, <code>events</code>,
+        <code>ticket_types</code>, <code>registrations</code>, <code>ratings</code>, <code>comments</code>) s cizími
+        klíči, indexy a unikátními omezeními.
+        Časy událostí se ukládají v UTC a v uživatelském rozhraní se zobrazují v zóně <code>Europe/Prague</code>.
+    </p>
+    <p>
+        <img src="db-schema.svg" alt="Grafické schéma relační databáze" class="schema-img" />
+    </p>
 
-<h2>5. Instalace a spuštění</h2>
-<pre><code>composer install --no-dev
+    <h2>Instalace</h2>
+
+    <p><strong>Softwarové požadavky a použité knihovny třetích stran:</strong></p>
+    <ul>
+        <li>PHP <code>8.1+</code> s rozšířeními <code>pdo_mysql</code>, <code>gd</code>, <code>zip</code>,
+            <code>mbstring</code>, <code>openssl</code></li>
+        <li>Databázový server MySQL <code>8.0+</code> nebo MariaDB <code>10.6+</code> (InnoDB, kódování
+            <code>utf8mb4</code>)</li>
+        <li>Composer (pro instalaci PHP závislostí)</li>
+        <li>Backend knihovny: <code>laravel/framework 10.50.4</code>, <code>laravel/sanctum 3.3.3</code>,
+            <code>guzzlehttp/guzzle 7.16.3</code></li>
+        <li>Frontend knihovny: Bootstrap <code>5.3.3</code> (uložen lokálně v <code>public/assets/vendor/</code>), čistý
+            JavaScript (ověřeno v Chrome a Firefox)</li>
+        <li>Testování (pouze vývoj): <code>phpunit/phpunit 10.5.67</code>, <code>fakerphp/faker 1.24.1</code></li>
+    </ul>
+
+    <p><strong>Postup rozbalení, konfigurace a inicializace databáze:</strong></p>
+<pre><code>unzip xdudekl00.zip -d ~/iis-app
+cd ~/iis-app
+composer install --no-dev --optimize-autoloader
 cp .env.example .env
-php artisan key:generate
-# v .env nastavit DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD a APP_URL
-php artisan migrate --seed</code></pre>
-<p>Na serveru <strong>Eva</strong> nastavte kořen webu (<code>DocumentRoot</code> / <code>.htaccess</code>) na složku <code>public/</code> a zajistěte práva zápisu do <code>storage/</code>, <code>bootstrap/cache/</code> a <code>public/uploads/</code>. Lokální testy se spouští příkazem <code>php artisan test</code> nad testovací databází <code>iis_test</code>.</p>
+    php83 artisan key:generate --force</code></pre>
+
+    <p>V souboru <code>.env</code> nastavte připojení k produkční MySQL/MariaDB databázi a URL aplikace (na serveru Eva
+        včetně socketu <code>DB_SOCKET</code>):</p>
+    <pre><code>APP_ENV=production
+APP_DEBUG=false
+APP_URL=http://www.stud.fit.vutbr.cz/~xdudekl00/IIS
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_SOCKET=/var/run/mysql/mysql.sock
+DB_DATABASE=xdudekl00
+DB_USERNAME=xdudekl00
+DB_PASSWORD=heslo</code></pre>
+
+    <p>Inicializace databázového schématu a naplnění ukázkovými daty:</p>
+    <pre><code>php83 artisan migrate --seed --force</code></pre>
+
+    <p><strong>Nastavení webového serveru (server Eva / Apache):</strong></p>
+    <ul>
+        <li>Zkopírujte obsah složky <code>public/</code> do <code>~/WWW/IIS/</code> (zbytek aplikace zůstává mimo
+            <code>~/WWW/</code>), v <code>~/WWW/IIS/index.php</code> upravte cesty k <code>vendor/autoload.php</code> a
+            <code>bootstrap/app.php</code> na <code>../../iis-app/...</code> a zavolejte
+            <code>$app-&gt;usePublicPath(__DIR__);</code>.</li>
+        <li>V <code>~/WWW/IIS/.htaccess</code> nastavte <code>AddDefaultCharset UTF-8</code> a
+            <code>RewriteBase /~xdudekl00/IIS/</code>.</li>
+        <li>Nastavte bezpečná práva (<code>chmod -R go-w</code>, <code>u+rwX,go+rX</code>), aby suPHP povolil běh
+            skriptů a umožnil zápis do <code>storage/</code>, <code>bootstrap/cache/</code> a
+            <code>~/WWW/IIS/uploads/</code>.</li>
+        <li>Soubor <code>doc.html</code> s testovacími hesly nenahrávejte do veřejně přístupného adresáře na produkčním
+            serveru.</li>
+        <li>Lokální spuštění vývojového serveru: <code>php artisan serve</code>; spuštění integračních testů:
+            <code>php artisan test</code>.</li>
+    </ul>
+
+    <h2>Známé problémy</h2>
+    <ul>
+        <li>Všechny povinné požadavky zadání i rozšíření pro propojení s Google kalendářem a <code>.ics</code> export
+            jsou plně implementovány.</li>
+        <li>Z volitelných návrhů na rozšíření nebyl implementován automatický import reálných událostí z externích
+            zdrojů.</li>
+        <li>Aplikace neposílá skutečné e-maily (notifikace o úhradě a schvalování probíhají přímo v uživatelském
+            rozhraní aplikace).</li>
+    </ul>
 
 </body>
+
 </html>
