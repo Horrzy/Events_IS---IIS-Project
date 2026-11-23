@@ -156,6 +156,10 @@ class EventWorkflowTest extends TestCase
             ->post("/udalosti/{$event->slug}/hodnoceni", ['stars' => 5])
             ->assertRedirect("/udalosti/{$event->slug}");
         $this->assertDatabaseHas('ratings', ['event_id' => $event->id, 'user_id' => $participant->id, 'stars' => 5]);
+        $this->get("/udalosti/{$event->slug}")
+            ->assertStatus(200)
+            ->assertSee('★★★★★')
+            ->assertSee('(5/5)');
 
         $this->actingAs($participant)
             ->post("/udalosti/{$event->slug}/komentar", ['body' => 'Výborná akce!'])
@@ -164,6 +168,10 @@ class EventWorkflowTest extends TestCase
             ->post("/udalosti/{$event->slug}/komentar", ['body' => 'Upravený komentář!'])
             ->assertRedirect("/udalosti/{$event->slug}");
         $this->assertDatabaseCount('comments', 1);
+        $this->get("/udalosti/{$event->slug}")
+            ->assertStatus(200)
+            ->assertSee('Upravený komentář!')
+            ->assertSee('(5/5)');
 
         $comment = Comment::where('event_id', $event->id)->firstOrFail();
         $this->assertSame('Upravený komentář!', $comment->body);

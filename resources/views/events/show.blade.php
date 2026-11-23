@@ -172,11 +172,20 @@
                             <p class="small text-muted mb-3">Hodnotit a komentovat mohou pouze účastníci s potvrzenou registrací na tuto událost.</p>
                         @endif
 
-                        @forelse ($comments as $comment)
+                        @foreach ($comments as $comment)
+                            @php
+                                $commentRating = $ratingsByUser->get($comment->user_id);
+                            @endphp
                             <div class="border-top pt-3 mt-3 {{ $comment->is_hidden ? 'opacity-75' : '' }}">
                                 <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
                                     <div>
                                         <span class="fw-semibold small">{{ $comment->user?->name ?? 'Uživatel' }}</span>
+                                        @if ($commentRating)
+                                            <span class="ms-2 text-warning small" title="{{ $commentRating->stars }} / 5">
+                                                {{ str_repeat('★', $commentRating->stars) }}{{ str_repeat('☆', 5 - $commentRating->stars) }}
+                                            </span>
+                                            <span class="text-muted small">({{ $commentRating->stars }}/5)</span>
+                                        @endif
                                         <span class="text-muted small ms-2">
                                             {{ $comment->created_at->copy()->setTimezone('Europe/Prague')->format('d. m. Y H:i') }}
                                         </span>
@@ -210,9 +219,26 @@
                                 </div>
                                 <div class="small" style="white-space: pre-line;">{{ $comment->body }}</div>
                             </div>
-                        @empty
-                            <p class="small text-muted mb-0">Zatím nebyly přidány žádné komentáře.</p>
-                        @endforelse
+                        @endforeach
+
+                        @foreach ($ratingsOnly as $rating)
+                            <div class="border-top pt-3 mt-3">
+                                <div class="d-flex align-items-center flex-wrap gap-1">
+                                    <span class="fw-semibold small">{{ $rating->user?->name ?? 'Uživatel' }}</span>
+                                    <span class="ms-2 text-warning small" title="{{ $rating->stars }} / 5">
+                                        {{ str_repeat('★', $rating->stars) }}{{ str_repeat('☆', 5 - $rating->stars) }}
+                                    </span>
+                                    <span class="text-muted small">({{ $rating->stars }}/5)</span>
+                                    <span class="text-muted small ms-2">
+                                        {{ $rating->updated_at->copy()->setTimezone('Europe/Prague')->format('d. m. Y H:i') }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        @if ($comments->isEmpty() && $ratingsOnly->isEmpty())
+                            <p class="small text-muted mb-0">Zatím bez hodnocení a komentářů.</p>
+                        @endif
                     </div>
                 </div>
             @endif

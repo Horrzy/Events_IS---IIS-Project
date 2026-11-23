@@ -118,11 +118,11 @@ class EventController extends Controller
 
         $googleCalendarUrl = $this->buildGoogleCalendarUrl($event);
 
-        $ratingsCount = $event->ratings()->count();
-        $averageRating = $ratingsCount > 0 ? round((float) $event->ratings()->avg('stars'), 1) : null;
-        $userRating = $user !== null
-            ? $event->ratings()->where('user_id', $user->id)->first()
-            : null;
+        $ratings = $event->ratings()->with('user')->orderByDesc('updated_at')->get();
+        $ratingsCount = $ratings->count();
+        $averageRating = $ratingsCount > 0 ? round((float) $ratings->avg('stars'), 1) : null;
+        $ratingsByUser = $ratings->keyBy('user_id');
+        $userRating = $user !== null ? $ratingsByUser->get($user->id) : null;
         $userComment = $user !== null
             ? $event->comments()->where('user_id', $user->id)->first()
             : null;
@@ -139,6 +139,11 @@ class EventController extends Controller
         }
         $comments = $commentsQuery->get();
 
+        $allCommentUserIds = $event->comments()->pluck('user_id')->all();
+        $ratingsOnly = $ratings->filter(
+            fn ($rating) => !in_array($rating->user_id, $allCommentUserIds, true)
+        );
+
         return view('events.show', [
             'event' => $event,
             'occupiedCount' => $occupiedCount,
@@ -147,6 +152,8 @@ class EventController extends Controller
             'googleCalendarUrl' => $googleCalendarUrl,
             'ratingsCount' => $ratingsCount,
             'averageRating' => $averageRating,
+            'ratingsByUser' => $ratingsByUser,
+            'ratingsOnly' => $ratingsOnly,
             'userRating' => $userRating,
             'userComment' => $userComment,
             'canGiveFeedback' => $canGiveFeedback,
