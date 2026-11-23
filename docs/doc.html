@@ -117,9 +117,9 @@
 
     <h3>Video</h3>
     <p>
-        <!-- TODO: Doplnit skutečný odkaz na komentované video (~5 min) např. na VUT Google Drive -->
         Odkaz na komentované video demonstrující použití aplikace:
-        <a href="https://drive.google.com/"><em>(doplnit odkaz na video před odevzdáním)</em></a>
+        <a href="https://drive.google.com/file/d/1C0HfDHdNAFNmzbwyM8H5oa2RusaI-0oV/view?usp=sharing"><em>Odkaz na
+                video</em></a>
     </p>
 
     <h2>Implementace</h2>
@@ -170,7 +170,8 @@
         <tr>
             <td>Zakládání, úpravy, odeslání ke schválení a zrušení události + správa typů vstupného</td>
             <td><code>GET /moje-udalosti</code>, <code>GET/POST /udalosti/nova</code>,
-                <code>/udalosti/{event}/upravit|odeslat|zrusit</code></td>
+                <code>/udalosti/{event}/upravit|odeslat|zrusit</code>
+            </td>
             <td><code>EventController</code>, <code>EventService</code>, <code>ImageUploadService</code></td>
             <td><code>events/mine.blade.php</code>, <code>events/form.blade.php</code></td>
         </tr>
@@ -178,7 +179,8 @@
             <td>Registrace na událost (transakční kontrola kapacity), zrušení, hlášení a potvrzení úhrady</td>
             <td><code>POST /udalosti/{slug}/registrace</code>, <code>GET /moje-registrace</code>,
                 <code>GET /udalosti/{event}/ucastnici</code>,
-                <code>POST /registrace/{registration}/zrusit|uhrazeno|potvrdit|odmitnout</code></td>
+                <code>POST /registrace/{registration}/zrusit|uhrazeno|potvrdit|odmitnout</code>
+            </td>
             <td><code>RegistrationController</code>, <code>RegistrationService</code></td>
             <td><code>registrations/index.blade.php</code>, <code>registrations/participants.blade.php</code></td>
         </tr>
@@ -191,14 +193,16 @@
         <tr>
             <td>Hodnocení (1–5 hvězdiček) a komentáře po skončení události</td>
             <td><code>POST /udalosti/{slug}/hodnoceni</code>, <code>POST /udalosti/{slug}/komentar</code>,
-                <code>POST /komentare/{comment}/smazat</code></td>
+                <code>POST /komentare/{comment}/smazat</code>
+            </td>
             <td><code>FeedbackController</code></td>
             <td><code>events/show.blade.php</code></td>
         </tr>
         <tr>
             <td>Katalog míst konání, návrh nového místa s fotkou a přehled mých návrhů</td>
             <td><code>GET /mista</code>, <code>GET /mista/{venue}</code>, <code>GET/POST /mista/navrhnout</code>,
-                <code>GET /moje-navrhy</code></td>
+                <code>GET /moje-navrhy</code>
+            </td>
             <td><code>VenueController</code>, <code>ImageUploadService</code></td>
             <td><code>venues/*.blade.php</code>, <code>proposals/index.blade.php</code></td>
         </tr>
@@ -270,19 +274,22 @@
     <p><strong>Softwarové požadavky a použité knihovny třetích stran:</strong></p>
     <ul>
         <li>PHP <code>8.1+</code> s rozšířeními <code>pdo_mysql</code>, <code>gd</code>, <code>zip</code>,
-            <code>mbstring</code>, <code>openssl</code></li>
+            <code>mbstring</code>, <code>openssl</code>
+        </li>
         <li>Databázový server MySQL <code>8.0+</code> nebo MariaDB <code>10.6+</code> (InnoDB, kódování
-            <code>utf8mb4</code>)</li>
+            <code>utf8mb4</code>)
+        </li>
         <li>Composer (pro instalaci PHP závislostí)</li>
         <li>Backend knihovny: <code>laravel/framework 10.50.4</code>, <code>laravel/sanctum 3.3.3</code>,
-            <code>guzzlehttp/guzzle 7.16.3</code></li>
+            <code>guzzlehttp/guzzle 7.16.3</code>
+        </li>
         <li>Frontend knihovny: Bootstrap <code>5.3.3</code> (uložen lokálně v <code>public/assets/vendor/</code>), čistý
             JavaScript (ověřeno v Chrome a Firefox)</li>
         <li>Testování (pouze vývoj): <code>phpunit/phpunit 10.5.67</code>, <code>fakerphp/faker 1.24.1</code></li>
     </ul>
 
     <p><strong>Postup rozbalení, konfigurace a inicializace databáze:</strong></p>
-<pre><code>unzip xdudekl00.zip -d ~/iis-app
+    <pre><code>unzip xdudekl00.zip -d ~/iis-app
 cd ~/iis-app
 composer install --no-dev --optimize-autoloader
 cp .env.example .env
@@ -310,16 +317,20 @@ DB_PASSWORD=heslo</code></pre>
         <li>Zkopírujte obsah složky <code>public/</code> do <code>~/WWW/IIS/</code> (zbytek aplikace zůstává mimo
             <code>~/WWW/</code>), v <code>~/WWW/IIS/index.php</code> upravte cesty k <code>vendor/autoload.php</code> a
             <code>bootstrap/app.php</code> na <code>../../iis-app/...</code> a zavolejte
-            <code>$app-&gt;usePublicPath(__DIR__);</code>.</li>
+            <code>$app-&gt;usePublicPath(__DIR__);</code>.
+        </li>
         <li>V <code>~/WWW/IIS/.htaccess</code> nastavte <code>AddDefaultCharset UTF-8</code> a
-            <code>RewriteBase /~xdudekl00/IIS/</code>.</li>
+            <code>RewriteBase /~xdudekl00/IIS/</code>.
+        </li>
         <li>Nastavte bezpečná práva (<code>chmod -R go-w</code>, <code>u+rwX,go+rX</code>), aby suPHP povolil běh
             skriptů a umožnil zápis do <code>storage/</code>, <code>bootstrap/cache/</code> a
-            <code>~/WWW/IIS/uploads/</code>.</li>
+            <code>~/WWW/IIS/uploads/</code>.
+        </li>
         <li>Soubor <code>doc.html</code> s testovacími hesly nenahrávejte do veřejně přístupného adresáře na produkčním
             serveru.</li>
         <li>Lokální spuštění vývojového serveru: <code>php artisan serve</code>; spuštění integračních testů:
-            <code>php artisan test</code>.</li>
+            <code>php artisan test</code>.
+        </li>
     </ul>
 
     <h2>Známé problémy</h2>
