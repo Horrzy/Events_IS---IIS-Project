@@ -87,7 +87,11 @@ class EventWorkflowTest extends TestCase
             'user_id' => $secondParticipant->id,
         ]);
 
-        // 6. Event manager confirms payment
+        // 6. Event manager views participants list and confirms payment
+        $this->actingAs($organizer)
+            ->get("/udalosti/{$event->id}/ucastnici")
+            ->assertStatus(200)
+            ->assertSee($participant->name);
         $this->actingAs($organizer)
             ->post("/registrace/{$registration->id}/potvrdit")
             ->assertSessionHas('success');

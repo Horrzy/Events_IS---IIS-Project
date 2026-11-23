@@ -83,7 +83,7 @@ class RegistrationController extends Controller
         $registrations = Registration::query()
             ->with(['user', 'ticketType', 'confirmer'])
             ->where('event_id', $event->id)
-            ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'cancelled')")
+            ->orderByRaw("CASE status WHEN 'pending' THEN 1 WHEN 'confirmed' THEN 2 WHEN 'cancelled' THEN 3 ELSE 4 END")
             ->orderByDesc('created_at')
             ->get();
 
