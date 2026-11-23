@@ -6,12 +6,9 @@
     <div class="hero-card p-4 p-md-5 shadow-sm mb-5">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
-                <span class="badge hero-badge mb-2">
-                    Kulturní, vzdělávací i společenské akce
-                </span>
-                <h1 class="display-6 fw-bold mb-3 text-white">Objevujte události nebo uspořádejte vlastní</h1>
+                <h1 class="display-6 fw-bold mb-3 text-white">Najděte akci nebo založte vlastní</h1>
                 <p class="mb-4" style="color: rgba(255, 255, 255, 0.82);">
-                    Procházejte koncerty, přednášky, workshopy a setkání podle hierarchických kategorií, registrujte se online a mějte svůj osobní kalendář vždy po ruce.
+                    Koncerty, divadlo, workshopy i přednášky na jednom místě. Přihlaste se na vybrané události a sledujte je v osobním kalendáři.
                 </p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="{{ route('events.index') }}" class="btn btn-sapling px-4">Procházet katalog</a>
@@ -53,7 +50,7 @@
     @if ($upcomingEvents->isEmpty())
         <div class="card shadow-sm">
             <div class="card-body text-center py-4 text-muted">
-                Zatím nejsou vypsány žádné nadcházející schválené události.
+                Zatím tu nejsou žádné nadcházející události.
             </div>
         </div>
     @else

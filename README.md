@@ -6,7 +6,7 @@ Webový informační systém pro správu akcí a událostí (semestrální proje
 - **Backend:** PHP 8.1 + Laravel 10 (`laravel/framework ^10.10`)
 - **Databáze:** MySQL / MariaDB (`InnoDB`, `utf8mb4`)
 - **Frontend:** Blade šablony + Bootstrap 5.3.3 (lokálně v `public/assets/vendor/`) + čistý JavaScript
-- **Testy:** PHPUnit 10 (`tests/Feature/`, `tests/Unit/`)
+- **Testy:** PHPUnit 10 (`tests/Feature/`)
 
 ## Hlavní funkce podle rolí
 - **Neregistrovaný uživatel:** prochází a filtruje schválené události, místa konání a hierarchické kategorie.

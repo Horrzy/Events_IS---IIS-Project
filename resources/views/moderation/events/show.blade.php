@@ -27,7 +27,7 @@
                         <a href="{{ route('moderation.events.show', $collision) }}" class="alert-link">{{ $collision->title }}</a>
                         ({{ $collision->starts_at->copy()->setTimezone('Europe/Prague')->format('d. m. Y H:i') }}
                         – {{ $collision->ends_at->copy()->setTimezone('Europe/Prague')->format('H:i') }},
-                        stav: {{ $collision->status }})
+                        stav: {{ $collision->statusLabel() }})
                     </li>
                 @endforeach
             </ul>
@@ -79,7 +79,7 @@
                     <h2 class="h5 mb-3">Souhrn</h2>
                     <dl class="small mb-0">
                         <dt class="text-muted">Stav</dt>
-                        <dd>{{ $event->status }}</dd>
+                        <dd>{{ $event->statusLabel() }}</dd>
                         <dt class="text-muted">Termín</dt>
                         <dd>{{ $startPrague->format('d. m. Y H:i') }} – {{ $endPrague->format('d. m. Y H:i') }}</dd>
                         <dt class="text-muted">Místo</dt>

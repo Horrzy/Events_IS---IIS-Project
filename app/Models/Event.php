@@ -41,6 +41,17 @@ class Event extends Model
         return sprintf('U-%s-%04d', $year, (int) $this->id);
     }
 
+    public function statusLabel(): string
+    {
+        return match ($this->status) {
+            'approved' => 'Schváleno',
+            'pending' => 'Čeká na schválení',
+            'rejected' => 'Zamítnuto',
+            'cancelled' => 'Zrušeno',
+            default => 'Koncept',
+        };
+    }
+
     public function venue(): BelongsTo
     {
         return $this->belongsTo(Venue::class);

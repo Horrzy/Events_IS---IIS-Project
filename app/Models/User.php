@@ -50,6 +50,15 @@ class User extends Authenticatable
         return in_array($this->role, ['moderator', 'admin'], true);
     }
 
+    public function roleLabel(): string
+    {
+        return match ($this->role) {
+            'admin' => 'Administrátor',
+            'moderator' => 'Moderátor',
+            default => 'Uživatel',
+        };
+    }
+
     public function managedEvents(): HasMany
     {
         return $this->hasMany(Event::class, 'manager_id');

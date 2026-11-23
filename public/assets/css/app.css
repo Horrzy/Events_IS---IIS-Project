@@ -226,12 +226,6 @@ a:hover {
     border-radius: 1rem;
 }
 
-.hero-badge {
-    background-color: rgba(226, 219, 164, 0.18);
-    color: var(--app-sapling-bright);
-    border: 1px solid rgba(226, 219, 164, 0.45);
-}
-
 .dropdown-menu {
     border: 1px solid var(--app-border);
     border-radius: 0.75rem;

@@ -39,7 +39,7 @@
     @if ($venues->isEmpty())
         <div class="card shadow-sm">
             <div class="card-body text-center py-5 text-muted">
-                <p class="mb-2">Zatím zde nejsou žádná schválená místa konání.</p>
+                <p class="mb-2">Zatím tu nejsou žádná místa konání.</p>
                 @auth
                     <a href="{{ route('venues.create') }}" class="btn btn-sm btn-primary">Navrhnout první místo</a>
                 @endauth

@@ -66,7 +66,7 @@
     @if ($events->isEmpty())
         <div class="card shadow-sm">
             <div class="card-body text-center py-5 text-muted">
-                <p class="mb-2">Zadaným filtrům neodpovídají žádné schválené události.</p>
+                <p class="mb-2">Zadaným filtrům neodpovídají žádné události.</p>
                 @auth
                     <a href="{{ route('events.create') }}" class="btn btn-sm btn-primary">Založit událost</a>
                 @endauth

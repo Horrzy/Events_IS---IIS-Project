@@ -5,7 +5,7 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Můj profil</h1>
-        <span class="badge text-bg-secondary">Role: {{ $user->role }}</span>
+        <span class="badge text-bg-secondary">Role: {{ $user->roleLabel() }}</span>
     </div>
 
     <div class="row g-4">

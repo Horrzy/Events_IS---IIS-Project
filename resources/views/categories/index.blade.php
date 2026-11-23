@@ -13,7 +13,7 @@
     <div class="card shadow-sm">
         @if ($tree === [])
             <div class="card-body text-center py-5 text-muted">
-                <p class="mb-2">Zatím nejsou schválené žádné kategorie.</p>
+                <p class="mb-2">Zatím tu nejsou žádné kategorie.</p>
                 @auth
                     <a href="{{ route('categories.create') }}" class="btn btn-sm btn-primary">Navrhnout první kategorii</a>
                 @endauth

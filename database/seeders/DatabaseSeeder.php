@@ -67,9 +67,9 @@ class DatabaseSeeder extends Seeder
         );
 
         $upcomingWorkshop = $this->upsertEvent(
-            'podzimni-php-laravel-workshop',
-            'Podzimní PHP a Laravel workshop',
-            'Praktický workshop zaměřený na tvorbu webových informačních systémů v PHP 8.1 a Laravelu 10. Přineste si vlastní notebook.',
+            'podzimni-webovy-workshop',
+            'Podzimní webový workshop',
+            'Praktický workshop pro začátečníky i mírně pokročilé zaměřený na tvorbu webových aplikací. Přineste si vlastní notebook.',
             Carbon::now('UTC')->addDays(5)->setTime(16, 0),
             Carbon::now('UTC')->addDays(5)->setTime(19, 30),
             $fit->id,
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
         $this->upsertEvent(
             'seminar-bezpecnosti-webu',
             'Seminář bezpečnosti webových aplikací',
-            'Otevřená přednáška o ochraně proti SQL injection, XSS, CSRF a správném návrhu autentizace.',
+            'Otevřená přednáška o běžných bezpečnostních chybách ve webových aplikacích a o tom, jak jim v praxi předcházet.',
             Carbon::now('UTC')->addDays(14)->setTime(15, 0),
             Carbon::now('UTC')->addDays(14)->setTime(17, 30),
             $ntk->id,
@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
         $this->upsertEvent(
             'rockovy-vecer-na-flede',
             'Rockový večer na Flédě',
-            'Vystoupení tří brněnských studentských kapel. Návrh čeká na schválení moderátorem.',
+            'Večerní koncert tří brněnských studentských kapel. Otevření klubu v 18:30, první kapela začíná v 19:00.',
             Carbon::now('UTC')->addDays(20)->setTime(19, 0),
             Carbon::now('UTC')->addDays(20)->setTime(23, 0),
             $fleda->id,
@@ -141,9 +141,9 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->upsertEvent(
-            'koncept-jarni-konference',
-            'Koncept jarní konference',
-            'Rozpracovaný návrh jarní odborné akce (zatím jen koncept pořadatele).',
+            'jarni-sportovni-turnaj',
+            'Jarní sportovní turnaj',
+            'Celodenní amatérský turnaj v halových sportech pro týmy z Brna a okolí.',
             Carbon::now('UTC')->addDays(45)->setTime(9, 0),
             Carbon::now('UTC')->addDays(45)->setTime(17, 0),
             $semilasso->id,
@@ -179,7 +179,7 @@ class DatabaseSeeder extends Seeder
                 $hidden = Comment::create([
                     'event_id' => $pastConcert->id,
                     'user_id' => $moderator->id,
-                    'body' => 'Ukázkový komentář skrytý moderátorem pro demonstraci moderace.',
+                    'body' => 'Levné vstupenky na všechny akce v ČR, mrkněte na náš eshop!',
                 ]);
                 $hidden->is_hidden = true;
                 $hidden->hidden_by = $admin->id;

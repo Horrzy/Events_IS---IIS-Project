@@ -69,7 +69,7 @@
                                     {{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}
                                 </span>
                                 <span class="small fw-semibold">{{ auth()->user()->name }}</span>
-                                <span class="badge badge-role">{{ auth()->user()->role }}</span>
+                                <span class="badge badge-role">{{ auth()->user()->roleLabel() }}</span>
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm">
